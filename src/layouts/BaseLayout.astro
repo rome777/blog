@@ -45,9 +45,12 @@ const {
     <div class="shell">
       <div class="sidebar-slot" id="sidebar-slot">
         <Sidebar activeSlug={activeCategory} />
-        <!-- 사이드바가 닫혔을 때 마우스를 올리면 잠깐 미리 보이는 영역 -->
+        <!-- 사이드바가 닫혔을 때 마우스를 올리면 잠깐 미리 보이는 영역 (넓은 화면) -->
         <div class="sidebar-peek" aria-hidden="true"><span class="sidebar-peek__grip"></span></div>
       </div>
+
+      <!-- 좁은 화면에서 사이드바가 오버레이로 열렸을 때 바깥을 눌러 닫는 영역 -->
+      <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
 
       <main>
         <div class:list={['container', wide && 'wide']}>

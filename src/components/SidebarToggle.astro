@@ -1,6 +1,11 @@
 ---
-// 사이드바를 열고 닫는 버튼. 상태는 localStorage 에 저장되고
-// 닫힌 상태에서는 화면 왼쪽 끝에 마우스를 올리면 잠깐 미리 볼 수 있습니다.
+// 사이드바를 열고 닫는 버튼.
+//
+// 넓은 화면: 본문을 밀어내는 고정 사이드바를 열고 닫습니다.
+//           상태는 localStorage 에 저장되고, 닫힌 상태에서는
+//           왼쪽 끝에 마우스를 올리면 잠깐 미리 볼 수 있습니다 (Sidebar.astro 참고).
+// 좁은 화면: 항상 숨김이 기본값이고, 눌렀을 때만 오버레이로 뜹니다.
+//           페이지를 새로 열면 다시 숨김 상태로 돌아갑니다 (저장하지 않음).
 ---
 
 <button
@@ -21,29 +26,52 @@
 <script>
   const root = document.documentElement;
   const button = document.getElementById('sidebar-toggle');
+  const backdrop = document.getElementById('sidebar-backdrop');
 
-  const isOpen = () => root.dataset.sidebar !== 'closed';
+  // 사이드바 CSS 의 반응형 분기점과 맞춰둡니다.
+  const narrow = window.matchMedia('(max-width: 1099px)');
+
+  const isOpen = () =>
+    narrow.matches ? root.dataset.sidebarMobile === 'open' : root.dataset.sidebar !== 'closed';
 
   const sync = () => button?.setAttribute('aria-expanded', String(isOpen()));
 
   function setOpen(open: boolean) {
-    root.dataset.sidebar = open ? 'open' : 'closed';
-    try {
-      localStorage.setItem('sidebar', open ? 'open' : 'closed');
-    } catch {
-      /* 저장 실패는 무시 */
+    if (narrow.matches) {
+      // 좁은 화면에서는 오버레이일 뿐이라 기억해두지 않습니다.
+      if (open) root.dataset.sidebarMobile = 'open';
+      else delete root.dataset.sidebarMobile;
+    } else {
+      root.dataset.sidebar = open ? 'open' : 'closed';
+      try {
+        localStorage.setItem('sidebar', open ? 'open' : 'closed');
+      } catch {
+        /* 저장 실패는 무시 */
+      }
     }
     sync();
   }
 
   sync();
   button?.addEventListener('click', () => setOpen(!isOpen()));
+  backdrop?.addEventListener('click', () => setOpen(false));
+
+  // 화면 폭이 바뀌면 반대쪽 모드의 상태가 남아있지 않게 정리합니다.
+  narrow.addEventListener('change', () => {
+    delete root.dataset.sidebarMobile;
+    sync();
+  });
 
   // 입력 중이 아닐 때 \ 키로도 여닫을 수 있게 합니다.
   document.addEventListener('keydown', (event) => {
-    if (event.key !== '\\' || event.metaKey || event.ctrlKey || event.altKey) return;
-
     const target = event.target as HTMLElement | null;
+
+    if (event.key === 'Escape' && narrow.matches && isOpen()) {
+      setOpen(false);
+      return;
+    }
+
+    if (event.key !== '\\' || event.metaKey || event.ctrlKey || event.altKey) return;
     if (target?.closest('input, textarea, select, [contenteditable]')) return;
 
     event.preventDefault();

@@ -81,4 +81,31 @@ const activeSlug = Astro.props.activeSlug ?? fromUrl;
   for (const link of document.querySelectorAll('.tree__row > .tree__link')) {
     link.addEventListener('click', (event) => event.stopPropagation());
   }
+
+  // ------------------------------------------------------------
+  //  닫힌 상태에서의 호버 미리보기
+  //  - 마우스를 올리면 곧바로 나타납니다 (지연 없음)
+  //  - 마우스를 떼면 300ms 뒤에 사라집니다 (실수로 스쳐도 안 닫히게)
+  //  - 버튼으로 닫을 때는 이 로직과 무관하게 즉시 닫힙니다
+  // ------------------------------------------------------------
+  const slot = document.getElementById('sidebar-slot');
+
+  if (slot) {
+    let hideTimer: number | undefined;
+
+    const peek = () => {
+      window.clearTimeout(hideTimer);
+      slot.classList.add('is-peeking');
+    };
+
+    const unpeek = () => {
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => slot.classList.remove('is-peeking'), 300);
+    };
+
+    slot.addEventListener('mouseenter', peek);
+    slot.addEventListener('mouseleave', unpeek);
+    slot.addEventListener('focusin', peek);
+    slot.addEventListener('focusout', unpeek);
+  }
 </script>

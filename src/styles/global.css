@@ -166,11 +166,17 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .theme-toggle svg,
 .sidebar-toggle svg { width: 1.0625rem; height: 1.0625rem; }
 
-/* 닫혀 있으면 버튼도 눌린 상태가 아님을 색으로 알려줍니다. */
-:root[data-sidebar='open'] .sidebar-toggle {
-  color: var(--accent-text);
-  border-color: var(--accent);
-  background: var(--accent-soft);
+/*
+  닫혀 있으면 버튼도 눌린 상태가 아님을 색으로 알려줍니다.
+  좁은 화면에서는 data-sidebar-mobile 이 대신 이 역할을 하므로 (아래 반응형 블록)
+  여기서는 넓은 화면에서만 적용합니다.
+*/
+@media (min-width: 1100px) {
+  :root[data-sidebar='open'] .sidebar-toggle {
+    color: var(--accent-text);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
 }
 .theme-toggle .icon-moon { display: none; }
 :root[data-theme='dark'] .theme-toggle .icon-sun { display: none; }
@@ -206,7 +212,8 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .sidebar-slot {
   flex: 0 0 auto;
   width: var(--sidebar-w);
-  border-right: 1px solid var(--border);
+  /* 세로 1px 선은 --border 로는 배경과 대비가 약해 거의 안 보이므로 좀 더 진한 색을 씁니다. */
+  border-right: 1px solid var(--border-strong);
   transition: width .2s ease;
 }
 
@@ -328,17 +335,22 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
   height: calc(100dvh - var(--header-h));
   max-height: none;
   z-index: 40;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--border-strong);
   box-shadow: var(--shadow);
   transform: translateX(-100%);
-  /* 마우스가 벗어나면 곧바로 닫히지 않게 조금 기다립니다. */
-  transition: transform .2s ease .3s;
+  /* 지연 없이 즉시 닫힙니다. 마우스가 벗어난 뒤의 유예 시간은
+     JS 가 .is-peeking 클래스를 늦게 떼는 방식으로 처리합니다. */
+  transition: transform .2s ease;
 }
 
-:root[data-sidebar='closed'] .sidebar-slot:hover .sidebar,
-:root[data-sidebar='closed'] .sidebar-slot:focus-within .sidebar {
+/*
+  .is-peeking 은 JS 가 붙입니다 (Sidebar.astro 참고).
+  - 마우스를 올리면 곧바로 붙어서 곧바로 나타나고
+  - 마우스를 떼면 300ms 뒤에 떼어져서 곧바로 사라집니다
+  버튼으로 닫을 때는 이 클래스가 관여하지 않아 딜레이 없이 바로 닫힙니다.
+*/
+:root[data-sidebar='closed'] .sidebar-slot.is-peeking .sidebar {
   transform: translateX(0);
-  transition-delay: 0s;
 }
 
 :root[data-sidebar='closed'] .sidebar-peek {
@@ -763,10 +775,54 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 
 /* ---------- 반응형 ---------- */
 
-/* 가로 폭이 부족하면 사이드바를 아예 내립니다. 메뉴의 '카테고리' 로 이동하면 됩니다. */
+/*
+  가로 폭이 좁으면 사이드바가 본문을 밀어내지 않고,
+  기본값은 숨김이며 토글 버튼을 누르면 오버레이로 뜹니다.
+  (호버 미리보기는 터치 환경에 의미가 없어 여기서는 끕니다.)
+*/
 @media (max-width: 1099px) {
-  .sidebar-slot,
-  .sidebar-toggle { display: none; }
+  .sidebar-slot {
+    width: 0;
+    border-right: 0;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--header-h);
+    height: calc(100dvh - var(--header-h));
+    max-height: none;
+    z-index: 40;
+    width: min(var(--sidebar-w), 80vw);
+    border-right: 1px solid var(--border-strong);
+    box-shadow: var(--shadow);
+    transform: translateX(-100%);
+    transition: transform .2s ease;
+  }
+
+  :root[data-sidebar-mobile='open'] .sidebar {
+    transform: translateX(0);
+  }
+
+  :root[data-sidebar-mobile='open'] .sidebar-toggle {
+    color: var(--accent-text);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .sidebar-peek { display: none !important; }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: var(--header-h) 0 0 0;
+    background: rgba(0, 0, 0, .35);
+    z-index: 39;
+  }
+
+  :root[data-sidebar-mobile='open'] .sidebar-backdrop {
+    display: block;
+  }
 }
 
 @media (max-width: 640px) {
