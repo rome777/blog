@@ -22,6 +22,7 @@ export const SITE_LANG = 'ko';
 export const NAV = [
   { label: '홈', href: '/' },
   { label: '글', href: '/posts' },
+  { label: '카테고리', href: '/categories' },
   { label: '태그', href: '/tags' },
   { label: '검색', href: '/search' },
   { label: '소개', href: '/about' },

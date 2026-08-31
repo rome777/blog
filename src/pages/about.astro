@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_AUTHOR, SOCIALS, url } from '../consts';
-import { getPublishedPosts, groupByCategory, groupByTag } from '../utils/posts';
+import { getPublishedPosts, buildCategoryTree, flattenCategoryTree, groupByTag } from '../utils/posts';
 
 const posts = await getPublishedPosts();
-const categories = groupByCategory(posts);
+const tree = buildCategoryTree(posts);
+const categories = flattenCategoryTree(tree);
 const tags = groupByTag(posts);
 const firstPost = posts.at(-1);
 ---
@@ -40,7 +41,10 @@ const firstPost = posts.at(-1);
         <ul>
           {categories.map((category) => (
             <li>
-              <a href={url(`/categories/${category.slug}`)}>{category.name}</a> — {category.posts.length}편
+              <a href={url(`/categories/${category.slug}`)}>
+                {category.path.replace(/\//g, ' / ')}
+              </a>{' '}
+              — {category.total}편
             </li>
           ))}
         </ul>

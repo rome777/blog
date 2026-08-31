@@ -31,6 +31,22 @@ export function slugify(value: string): string {
     .replace(/[^\p{L}\p{N}-]/gu, '');
 }
 
+/**
+ * 카테고리는 '/' 로 계층을 나눕니다. '딥러닝/CNN' → ['딥러닝', 'CNN']
+ * 슬래시가 없으면 1단계 카테고리가 됩니다.
+ */
+export function categorySegments(category: string): string[] {
+  return category
+    .split('/')
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+}
+
+/** '딥러닝/CNN' → '딥러닝/cnn' (URL 용, 단계마다 slugify) */
+export function categorySlug(category: string): string {
+  return categorySegments(category).map(slugify).join('/');
+}
+
 /** 2026-08-31 → '2026년 8월 31일' */
 export function formatDate(date: Date): string {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;

@@ -5,7 +5,7 @@ import BaseLayout from './BaseLayout.astro';
 import TagRow from '../components/TagRow.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Comments from '../components/Comments.astro';
-import { url, slugify, formatDate, isoDate, readingTime } from '../consts';
+import { url, slugify, categorySegments, formatDate, isoDate, readingTime } from '../consts';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -16,6 +16,14 @@ interface Props {
 
 const { post, headings, prev, next } = Astro.props;
 const { title, description, pubDate, updatedDate, category, tags } = post.data;
+
+// '딥러닝/CNN' → 단계마다 링크를 걸 수 있게 조각을 만들어 둡니다.
+const segments = categorySegments(category);
+const trail = segments.map((name, index) => ({
+  name,
+  slug: segments.slice(0, index + 1).map(slugify).join('/'),
+}));
+const activeCategory = trail.at(-1)?.slug;
 ---
 
 <BaseLayout
@@ -24,10 +32,25 @@ const { title, description, pubDate, updatedDate, category, tags } = post.data;
   type="article"
   publishedTime={pubDate}
   modifiedTime={updatedDate}
+  activeCategory={activeCategory}
 >
   <article>
     <header class="post-header">
-      <a class="badge" href={url(`/categories/${slugify(category)}`)}>{category}</a>
+      <nav class="crumbs" aria-label="카테고리">
+        {
+          trail.map((crumb, index) => (
+            <Fragment>
+              {index > 0 && <span aria-hidden="true">/</span>}
+              <a
+                class={index === trail.length - 1 ? 'badge' : undefined}
+                href={url(`/categories/${crumb.slug}`)}
+              >
+                {crumb.name}
+              </a>
+            </Fragment>
+          ))
+        }
+      </nav>
       <h1>{title}</h1>
       {description && <p class="post-header__desc">{description}</p>}
 

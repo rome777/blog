@@ -1,30 +1,44 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryTree from '../../components/CategoryTree.astro';
 import { url } from '../../consts';
-import { getPublishedPosts, groupByCategory } from '../../utils/posts';
+import { getPublishedPosts, buildCategoryTree, flattenCategoryTree } from '../../utils/posts';
 
 const posts = await getPublishedPosts();
-const categories = groupByCategory(posts);
+const tree = buildCategoryTree(posts);
+const all = flattenCategoryTree(tree);
 ---
 
 <BaseLayout title="카테고리" description="주제별로 학습 기록을 모아봅니다.">
   <div class="section-head">
     <h2>카테고리</h2>
-    <span class="muted">{categories.length}개</span>
+    <span class="muted">{all.length}개</span>
   </div>
 
   {
-    categories.length === 0 ? (
+    tree.length === 0 ? (
       <p class="empty">아직 카테고리가 없습니다.</p>
     ) : (
-      <div class="card-grid">
-        {categories.map((category) => (
-          <a class="card" href={url(`/categories/${category.slug}`)}>
-            <p class="card__title">{category.name}</p>
-            <span class="card__meta">{category.posts.length}개의 글</span>
-          </a>
-        ))}
-      </div>
+      <>
+        <div class="card-grid" style="margin-bottom: 2.5rem">
+          {tree.map((node) => (
+            <a class="card" href={url(`/categories/${node.slug}`)}>
+              <p class="card__title">{node.name}</p>
+              <span class="card__meta">
+                {node.total}개의 글
+                {node.children.length > 0 && ` · 하위 ${node.children.length}개`}
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <div class="section-head">
+          <h2>전체 구조</h2>
+        </div>
+        <div class="tree-panel">
+          <CategoryTree nodes={tree} />
+        </div>
+      </>
     )
   }
 </BaseLayout>

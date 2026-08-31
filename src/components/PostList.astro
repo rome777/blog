@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { url, slugify, formatDate, isoDate, readingTime } from '../consts';
+import { url, categorySlug, categorySegments, formatDate, isoDate, readingTime } from '../consts';
 import TagRow from './TagRow.astro';
 
 interface Props {
@@ -46,8 +46,12 @@ const rows = posts.map((post) => {
                 <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
                 <span aria-hidden="true">·</span>
                 <span>{readingTime(post.body ?? '')}분</span>
-                <a class="badge" href={url(`/categories/${slugify(post.data.category)}`)}>
-                  {post.data.category}
+                <a
+                  class="badge"
+                  href={url(`/categories/${categorySlug(post.data.category)}`)}
+                  title={post.data.category.replace(/\//g, ' / ')}
+                >
+                  {categorySegments(post.data.category).at(-1)}
                 </a>
               </div>
 

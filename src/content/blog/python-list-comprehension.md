@@ -2,7 +2,7 @@
 title: 리스트 컴프리헨션을 언제 쓰고 언제 안 쓸까
 description: 짧게 쓸 수 있다고 항상 좋은 건 아니었습니다. 읽기 어려워지는 경계선을 찾아봤습니다.
 pubDate: 2026-08-24
-category: Python
+category: Python/문법
 tags: [Python, 문법, 가독성]
 ---
 

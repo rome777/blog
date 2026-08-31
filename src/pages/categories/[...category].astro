@@ -1,0 +1,83 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { url } from '../../consts';
+import {
+  getPublishedPosts,
+  buildCategoryTree,
+  flattenCategoryTree,
+  postsInCategory,
+  type CategoryNode,
+} from '../../utils/posts';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const tree = buildCategoryTree(await getPublishedPosts());
+
+  return flattenCategoryTree(tree).map((node) => ({
+    params: { category: node.slug },
+    props: {
+      node,
+      posts: postsInCategory(node),
+      // 상위 경로를 눌러 올라갈 수 있도록 조각을 함께 넘깁니다.
+      trail: node.path.split('/').map((name, index) => ({
+        name,
+        slug: node.slug.split('/').slice(0, index + 1).join('/'),
+      })),
+    },
+  }));
+};
+
+const { node, posts, trail } = Astro.props as {
+  node: CategoryNode;
+  posts: Awaited<ReturnType<typeof postsInCategory>>;
+  trail: { name: string; slug: string }[];
+};
+
+const parents = trail.slice(0, -1);
+const childCount = node.children.length;
+---
+
+<BaseLayout
+  title={node.path.replace(/\//g, ' / ')}
+  description={`'${node.path}' 카테고리의 글 ${posts.length}개.`}
+  activeCategory={node.slug}
+>
+  <div class="section-head">
+    <div>
+      {
+        parents.length > 0 && (
+          <nav class="crumbs" aria-label="상위 카테고리">
+            {parents.map((crumb) => (
+              <Fragment>
+                <a href={url(`/categories/${crumb.slug}`)}>{crumb.name}</a>
+                <span aria-hidden="true">/</span>
+              </Fragment>
+            ))}
+          </nav>
+        )
+      }
+      <h2>{node.name}</h2>
+    </div>
+    <a href={url('/categories')}>← 전체 카테고리</a>
+  </div>
+
+  {
+    childCount > 0 && (
+      <div class="card-grid" style="margin-bottom: 2rem">
+        {node.children.map((child) => (
+          <a class="card" href={url(`/categories/${child.slug}`)}>
+            <p class="card__title">{child.name}</p>
+            <span class="card__meta">{child.total}개의 글</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+
+  <PostList
+    posts={posts}
+    groupByYear
+    emptyText="이 카테고리에는 아직 글이 없습니다."
+  />
+</BaseLayout>

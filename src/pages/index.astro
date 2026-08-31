@@ -3,11 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostList from '../components/PostList.astro';
 import TagRow from '../components/TagRow.astro';
 import { url, SITE_DESCRIPTION } from '../consts';
-import { getPublishedPosts, groupByCategory, groupByTag, toCountMap } from '../utils/posts';
+import { getPublishedPosts, buildCategoryTree, groupByTag, toCountMap } from '../utils/posts';
 
 const posts = await getPublishedPosts();
 const recent = posts.slice(0, 5);
-const categories = groupByCategory(posts);
+const categories = buildCategoryTree(posts);
 const tags = groupByTag(posts).slice(0, 20);
 ---
 
@@ -31,12 +31,16 @@ const tags = groupByTag(posts).slice(0, 20);
         <section>
           <div class="section-head">
             <h2>카테고리</h2>
+            <a href={url('/categories')}>모두 보기 →</a>
           </div>
           <div class="card-grid">
             {categories.map((category) => (
               <a class="card" href={url(`/categories/${category.slug}`)}>
                 <p class="card__title">{category.name}</p>
-                <span class="card__meta">{category.posts.length}개의 글</span>
+                <span class="card__meta">
+                  {category.total}개의 글
+                  {category.children.length > 0 && ` · 하위 ${category.children.length}개`}
+                </span>
               </a>
             ))}
           </div>

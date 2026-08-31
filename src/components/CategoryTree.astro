@@ -1,0 +1,58 @@
+---
+import type { CategoryNode } from '../utils/posts';
+import { url } from '../consts';
+
+interface Props {
+  nodes: CategoryNode[];
+  /** 현재 보고 있는 카테고리의 슬러그 경로 — 이 경로를 따라 자동으로 펼칩니다. */
+  activeSlug?: string;
+}
+
+const { nodes, activeSlug = '' } = Astro.props;
+
+const isCurrent = (node: CategoryNode) => activeSlug === node.slug;
+const isOnPath = (node: CategoryNode) => activeSlug.startsWith(`${node.slug}/`);
+---
+
+<ul class="tree">
+  {
+    nodes.map((node) => {
+      const href = url(`/categories/${node.slug}`);
+      const current = isCurrent(node);
+      const onPath = isOnPath(node);
+
+      return (
+        <li class="tree__item">
+          {node.children.length > 0 ? (
+            <details
+              class="tree__branch"
+              data-path={node.slug}
+              data-auto-open={onPath || current ? 'true' : undefined}
+              open={onPath || current || node.depth === 0}
+            >
+              <summary class="tree__row">
+                <svg class="tree__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+                <a class="tree__link" href={href} aria-current={current ? 'page' : undefined}>
+                  {node.name}
+                </a>
+                <span class="tree__count">{node.total}</span>
+              </summary>
+
+              <Astro.self nodes={node.children} activeSlug={activeSlug} />
+            </details>
+          ) : (
+            <div class="tree__row is-leaf">
+              <a class="tree__link" href={href} aria-current={current ? 'page' : undefined}>
+                {node.name}
+              </a>
+              <span class="tree__count">{node.total}</span>
+            </div>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>

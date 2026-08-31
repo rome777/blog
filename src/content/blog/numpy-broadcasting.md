@@ -2,7 +2,7 @@
 title: 넘파이 브로드캐스팅, 규칙 두 줄로 이해하기
 description: shape가 다른 배열끼리 연산될 때 무슨 일이 일어나는지, 그리고 왜 가끔 조용히 틀린 답이 나오는지.
 pubDate: 2026-08-28
-category: 데이터 분석
+category: 데이터 분석/NumPy
 tags: [NumPy, Python, 브로드캐스팅]
 ---
 

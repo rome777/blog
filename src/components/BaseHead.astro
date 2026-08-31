@@ -58,17 +58,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 />
 
 <!--
-  테마를 body 렌더 전에 확정해서 새로고침 시 흰 화면이 번쩍이는 걸 막습니다.
+  테마와 사이드바 상태를 body 렌더 전에 확정해서
+  새로고침 때 화면이 번쩍이거나 레이아웃이 밀리는 걸 막습니다.
   is:inline 이라 번들링되지 않고 그대로 head 에 들어갑니다.
 -->
 <script is:inline>
   (function () {
+    var root = document.documentElement;
     try {
-      var saved = localStorage.getItem('theme');
-      var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      var savedTheme = localStorage.getItem('theme');
+      var dark = savedTheme
+        ? savedTheme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'dark' : 'light';
+      root.dataset.sidebar = localStorage.getItem('sidebar') === 'closed' ? 'closed' : 'open';
     } catch (e) {
-      document.documentElement.dataset.theme = 'light';
+      root.dataset.theme = 'light';
+      root.dataset.sidebar = 'open';
     }
   })();
 </script>

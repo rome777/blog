@@ -27,6 +27,9 @@
   --width: 46rem;
   --width-wide: 60rem;
   --radius: 10px;
+
+  --header-h: 3.75rem;
+  --sidebar-w: 15.5rem;
 }
 
 :root[data-theme='dark'] {
@@ -114,8 +117,9 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .site-header__inner {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  height: 3.75rem;
+  gap: .75rem;
+  height: var(--header-h);
+  padding-inline: 1.25rem;
 }
 .site-header__brand {
   font-weight: 700;
@@ -139,7 +143,8 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .site-nav a:hover { color: var(--text); background: var(--bg-surface); text-decoration: none; }
 .site-nav a[aria-current='page'] { color: var(--accent-text); background: var(--accent-soft); }
 
-.theme-toggle {
+.theme-toggle,
+.sidebar-toggle {
   display: inline-grid;
   place-items: center;
   width: 2.125rem;
@@ -152,8 +157,21 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
   padding: 0;
   flex-shrink: 0;
 }
-.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); background: var(--bg-surface); }
-.theme-toggle svg { width: 1.0625rem; height: 1.0625rem; }
+.theme-toggle:hover,
+.sidebar-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-surface);
+}
+.theme-toggle svg,
+.sidebar-toggle svg { width: 1.0625rem; height: 1.0625rem; }
+
+/* 닫혀 있으면 버튼도 눌린 상태가 아님을 색으로 알려줍니다. */
+:root[data-sidebar='open'] .sidebar-toggle {
+  color: var(--accent-text);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
 .theme-toggle .icon-moon { display: none; }
 :root[data-theme='dark'] .theme-toggle .icon-sun { display: none; }
 :root[data-theme='dark'] .theme-toggle .icon-moon { display: block; }
@@ -168,6 +186,188 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .site-footer__inner { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; }
 .site-footer a { color: var(--text-muted); }
 .site-footer__links { margin-left: auto; display: flex; gap: 1rem; }
+
+/* ============================================================
+   사이드바 — 카테고리 트리
+   ------------------------------------------------------------
+   열림  : 왼쪽에 자리를 차지하고 본문을 밀어냅니다.
+   닫힘  : 폭이 0 이 되고, 화면 왼쪽 끝에 마우스를 올리면
+           본문 위로 잠깐 미끄러져 나옵니다.
+   ============================================================ */
+
+.shell {
+  flex: 1 0 auto;
+  display: flex;
+  width: 100%;
+}
+
+.shell > main { flex: 1 1 auto; min-width: 0; }
+
+.sidebar-slot {
+  flex: 0 0 auto;
+  width: var(--sidebar-w);
+  border-right: 1px solid var(--border);
+  transition: width .2s ease;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--header-h);
+  width: var(--sidebar-w);
+  max-height: calc(100dvh - var(--header-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  padding: 1.5rem 1rem 2rem 1.25rem;
+}
+
+.sidebar__section + .sidebar__section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar__heading {
+  margin: 0 0 .625rem;
+  padding-left: .375rem;
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.sidebar__empty {
+  margin: 0;
+  padding-left: .375rem;
+  font-size: .8125rem;
+  color: var(--text-subtle);
+}
+
+.sidebar__links { display: flex; flex-direction: column; gap: .125rem; }
+.sidebar__links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .3125rem .375rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  color: var(--text-muted);
+}
+.sidebar__links a:hover { background: var(--bg-surface); color: var(--text); text-decoration: none; }
+
+/* ---------- 카테고리 트리 ---------- */
+.tree { list-style: none; margin: 0; padding: 0; }
+
+/* 하위 단계는 안쪽으로 들여쓰고 세로 안내선을 그립니다. */
+.tree .tree {
+  margin-left: .8125rem;
+  padding-left: .375rem;
+  border-left: 1px solid var(--border);
+}
+
+.tree__branch > .tree__row { cursor: pointer; }
+
+.tree__row {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .25rem .375rem;
+  border-radius: 6px;
+  list-style: none;
+}
+.tree__row::-webkit-details-marker { display: none; }
+.tree__row::marker { content: ''; }
+.tree__row:hover { background: var(--bg-surface); }
+/* 잎 노드는 화살표가 없으니 그만큼 들여씁니다. */
+.tree__row.is-leaf { padding-left: 1.5rem; }
+
+.tree__chevron {
+  width: .875rem;
+  height: .875rem;
+  flex-shrink: 0;
+  color: var(--text-subtle);
+  transition: transform .15s ease;
+}
+.tree__branch[open] > .tree__row > .tree__chevron { transform: rotate(90deg); }
+
+.tree__link {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: .875rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tree__link:hover { color: var(--text); text-decoration: none; }
+.tree__link[aria-current='page'] { color: var(--accent-text); font-weight: 650; }
+.tree__row:has(> .tree__link[aria-current='page']) { background: var(--accent-soft); }
+
+.tree__count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  color: var(--text-subtle);
+}
+
+/* ---------- 닫힌 상태 + 호버 미리보기 ---------- */
+.sidebar-peek { display: none; }
+
+:root[data-sidebar='closed'] .sidebar-slot {
+  width: 0;
+  border-right: 0;
+}
+
+:root[data-sidebar='closed'] .sidebar {
+  position: fixed;
+  left: 0;
+  top: var(--header-h);
+  height: calc(100dvh - var(--header-h));
+  max-height: none;
+  z-index: 40;
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transform: translateX(-100%);
+  /* 마우스가 벗어나면 곧바로 닫히지 않게 조금 기다립니다. */
+  transition: transform .2s ease .3s;
+}
+
+:root[data-sidebar='closed'] .sidebar-slot:hover .sidebar,
+:root[data-sidebar='closed'] .sidebar-slot:focus-within .sidebar {
+  transform: translateX(0);
+  transition-delay: 0s;
+}
+
+:root[data-sidebar='closed'] .sidebar-peek {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: var(--header-h);
+  width: 1.125rem;
+  height: calc(100dvh - var(--header-h));
+  z-index: 39;
+}
+
+.sidebar-peek__grip {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--border-strong);
+  opacity: .55;
+  transition: opacity .15s ease, background-color .15s ease, height .15s ease;
+}
+.sidebar-peek:hover .sidebar-peek__grip {
+  opacity: 1;
+  height: 5rem;
+  background: var(--accent);
+}
 
 /* ---------- 히어로 ---------- */
 .hero { margin-bottom: 3rem; }
@@ -284,6 +484,29 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 
 .tag-cloud { display: flex; flex-wrap: wrap; gap: .5rem; }
 .tag-cloud .tag { padding: .3125rem .75rem; font-size: .8125rem; }
+
+/* ---------- 상위 카테고리 경로 ---------- */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .375rem;
+  margin-bottom: .1875rem;
+  font-size: .8125rem;
+  color: var(--text-subtle);
+}
+.crumbs a { color: var(--text-muted); }
+.crumbs span { color: var(--text-subtle); }
+
+/* 카테고리 페이지에서 트리를 본문 크기로 보여줄 때 */
+.tree-panel {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+}
+.tree-panel .tree__link { font-size: .9375rem; }
+.tree-panel .tree__row { padding-block: .3125rem; }
 
 /* ---------- 카드 그리드 ---------- */
 .card-grid {
@@ -539,6 +762,13 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .stack-lg > * + * { margin-top: 3rem; }
 
 /* ---------- 반응형 ---------- */
+
+/* 가로 폭이 부족하면 사이드바를 아예 내립니다. 메뉴의 '카테고리' 로 이동하면 됩니다. */
+@media (max-width: 1099px) {
+  .sidebar-slot,
+  .sidebar-toggle { display: none; }
+}
+
 @media (max-width: 640px) {
   main { padding-block: 2rem 3.5rem; }
   .site-header__inner { height: 3.5rem; gap: .5rem; }
