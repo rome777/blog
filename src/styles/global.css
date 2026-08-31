@@ -212,8 +212,6 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 .sidebar-slot {
   flex: 0 0 auto;
   width: var(--sidebar-w);
-  /* 세로 1px 선은 --border 로는 배경과 대비가 약해 거의 안 보이므로 좀 더 진한 색을 씁니다. */
-  border-right: 1px solid var(--border-strong);
   transition: width .2s ease;
 }
 
@@ -221,11 +219,15 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
   position: sticky;
   top: var(--header-h);
   width: var(--sidebar-w);
-  max-height: calc(100dvh - var(--header-h));
+  /* 내용이 짧아도 테두리가 화면 끝까지 이어지도록 max-height 대신 height 를 씁니다. */
+  height: calc(100dvh - var(--header-h));
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--bg);
   padding: 1.5rem 1rem 2rem 1.25rem;
+  /* aside 자신에 항상 붙입니다 (닫힘/오버레이 상태의 규칙도 같은 색으로 재선언).
+     --border 는 배경과 대비가 약해 거의 안 보이므로 좀 더 진한 색을 씁니다. */
+  border-right: 1px solid var(--border-strong);
 }
 
 .sidebar__section + .sidebar__section {
