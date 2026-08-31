@@ -1,0 +1,26 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { url } from '../../consts';
+import { getPublishedPosts, groupByTag } from '../../utils/posts';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPublishedPosts();
+  return groupByTag(posts).map((tag) => ({
+    params: { tag: tag.slug },
+    props: { name: tag.name, posts: tag.posts },
+  }));
+};
+
+const { name, posts } = Astro.props;
+---
+
+<BaseLayout title={`#${name}`} description={`'${name}' 태그가 붙은 글 ${posts.length}개.`}>
+  <div class="section-head">
+    <h2>#{name}</h2>
+    <a href={url('/tags')}>← 전체 태그</a>
+  </div>
+
+  <PostList posts={posts} showTags={false} />
+</BaseLayout>

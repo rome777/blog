@@ -1,0 +1,23 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { getPublishedPosts } from '../../utils/posts';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPublishedPosts();
+
+  // 최신순 배열이므로 뒤(i+1)가 이전 글, 앞(i-1)이 다음 글입니다.
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: { post, prev: posts[index + 1], next: posts[index - 1] },
+  }));
+};
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout post={post} headings={headings} prev={prev} next={next}>
+  <Content />
+</PostLayout>

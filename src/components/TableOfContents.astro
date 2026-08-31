@@ -1,0 +1,25 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+// h2 · h3 만 목차에 넣습니다. 두 개 미만이면 목차 자체를 숨깁니다.
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length >= 2 && (
+    <details class="toc" open>
+      <summary>목차</summary>
+      <ol>
+        {items.map((heading) => (
+          <li class={`depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  )
+}

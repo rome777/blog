@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import TagRow from '../components/TagRow.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import Comments from '../components/Comments.astro';
+import { url, slugify, formatDate, isoDate, readingTime } from '../consts';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings: MarkdownHeading[];
+  prev?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+
+const { post, headings, prev, next } = Astro.props;
+const { title, description, pubDate, updatedDate, category, tags } = post.data;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+>
+  <article>
+    <header class="post-header">
+      <a class="badge" href={url(`/categories/${slugify(category)}`)}>{category}</a>
+      <h1>{title}</h1>
+      {description && <p class="post-header__desc">{description}</p>}
+
+      <div class="post-header__meta">
+        <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+        <span aria-hidden="true">·</span>
+        <span>약 {readingTime(post.body ?? '')}분</span>
+        {
+          updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>수정 {formatDate(updatedDate)}</span>
+            </>
+          )
+        }
+      </div>
+    </header>
+
+    <TableOfContents headings={headings} />
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {
+      tags.length > 0 && (
+        <footer class="post-footer">
+          <TagRow tags={tags} />
+        </footer>
+      )
+    }
+  </article>
+
+  <nav class="post-nav" aria-label="이전 / 다음 글">
+    {
+      prev && (
+        <a class="post-nav__link" href={url(`/posts/${prev.id}`)}>
+          <span class="post-nav__label">← 이전 글</span>
+          <span class="post-nav__title">{prev.data.title}</span>
+        </a>
+      )
+    }
+    {
+      next && (
+        <a class="post-nav__link is-next" href={url(`/posts/${next.id}`)}>
+          <span class="post-nav__label">다음 글 →</span>
+          <span class="post-nav__title">{next.data.title}</span>
+        </a>
+      )
+    }
+  </nav>
+
+  <Comments />
+</BaseLayout>

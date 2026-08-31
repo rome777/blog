@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../consts';
+---
+
+<BaseLayout title="404">
+  <div class="empty" style="padding: 5rem 1rem;">
+    <p style="font-size: 2rem; margin: 0 0 .5rem;">404</p>
+    <p style="margin: 0 0 1.5rem;">찾으시는 페이지가 없습니다.</p>
+    <a href={url('/')}>홈으로 돌아가기</a>
+  </div>
+</BaseLayout>

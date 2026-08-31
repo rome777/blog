@@ -1,0 +1,23 @@
+---
+import { url } from '../consts';
+
+interface Props {
+  current: number;
+  last: number;
+}
+
+const { current, last } = Astro.props;
+
+// 1페이지는 /posts, 2페이지부터는 /posts/page/2 형태입니다.
+const pageHref = (n: number) => (n === 1 ? url('/posts') : url(`/posts/page/${n}`));
+---
+
+{
+  last > 1 && (
+    <nav class="pagination" aria-label="페이지 이동">
+      {current > 1 && <a href={pageHref(current - 1)} rel="prev">← 이전</a>}
+      <span class="current">{current} / {last}</span>
+      {current < last && <a href={pageHref(current + 1)} rel="next">다음 →</a>}
+    </nav>
+  )
+}

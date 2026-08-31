@@ -1,0 +1,40 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_LANG } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** 목록 페이지처럼 넓게 쓰고 싶을 때 */
+  wide?: boolean;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+}
+
+const { title, description, wide = false, type, publishedTime, modifiedTime } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class:list={['container', wide && 'wide']}>
+        <slot />
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

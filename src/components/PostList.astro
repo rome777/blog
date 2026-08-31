@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, slugify, formatDate, isoDate, readingTime } from '../consts';
+import TagRow from './TagRow.astro';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  /** 연도가 바뀔 때마다 구분선을 넣습니다 (전체 글 목록용) */
+  groupByYear?: boolean;
+  showTags?: boolean;
+  emptyText?: string;
+}
+
+const {
+  posts,
+  groupByYear = false,
+  showTags = true,
+  emptyText = '아직 작성된 글이 없습니다.',
+} = Astro.props;
+
+// 렌더링하면서 연도가 바뀌는 지점을 미리 표시해둡니다.
+let previousYear: number | null = null;
+const rows = posts.map((post) => {
+  const year = post.data.pubDate.getFullYear();
+  const isNewYear = groupByYear && year !== previousYear;
+  previousYear = year;
+  return { post, year, isNewYear };
+});
+---
+
+{
+  posts.length === 0 ? (
+    <p class="empty">{emptyText}</p>
+  ) : (
+    <ul class="post-list">
+      {rows.map(({ post, year, isNewYear }) => (
+        <Fragment>
+          {isNewYear && (
+            <li class="year-row">
+              <div class="year-divider">{year}</div>
+            </li>
+          )}
+          <li>
+            <article class="post-item">
+              <div class="post-item__meta">
+                <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+                <span aria-hidden="true">·</span>
+                <span>{readingTime(post.body ?? '')}분</span>
+                <a class="badge" href={url(`/categories/${slugify(post.data.category)}`)}>
+                  {post.data.category}
+                </a>
+              </div>
+
+              <h3 class="post-item__title">
+                <a href={url(`/posts/${post.id}`)}>{post.data.title}</a>
+              </h3>
+
+              {post.data.description && <p class="post-item__desc">{post.data.description}</p>}
+
+              {showTags && <TagRow tags={post.data.tags} class="post-item__tags" />}
+            </article>
+          </li>
+        </Fragment>
+      ))}
+    </ul>
+  )
+}

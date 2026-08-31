@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../consts';
+---
+
+<BaseLayout title="검색" description="제목·설명·태그·본문에서 글을 찾습니다.">
+  <div class="section-head">
+    <h2>검색</h2>
+  </div>
+
+  <div
+    id="search"
+    data-index={url('/search-index.json')}
+    data-base={url('/posts')}
+  >
+    <label class="search-box" for="search-input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-3.5-3.5"></path>
+      </svg>
+      <input
+        id="search-input"
+        type="search"
+        placeholder="제목, 태그, 본문에서 찾기…"
+        autocomplete="off"
+        autofocus
+      />
+      <span class="sr-only">검색어</span>
+    </label>
+
+    <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
+    <div id="search-results"></div>
+  </div>
+</BaseLayout>
+
+<script>
+  interface Entry {
+    slug: string;
+    title: string;
+    description: string;
+    date: string;
+    category: string;
+    tags: string[];
+    body: string;
+  }
+
+  const root = document.getElementById('search')!;
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  const status = document.getElementById('search-status')!;
+  const results = document.getElementById('search-results')!;
+
+  const indexUrl = root.dataset.index!;
+  const postBase = root.dataset.base!;
+
+  let entries: Entry[] | null = null;
+  let loading: Promise<Entry[]> | null = null;
+
+  /** 색인은 처음 검색할 때 한 번만 받아옵니다. */
+  function loadIndex(): Promise<Entry[]> {
+    if (entries) return Promise.resolve(entries);
+    if (!loading) {
+      loading = fetch(indexUrl)
+        .then((res) => res.json())
+        .then((data: Entry[]) => (entries = data))
+        .catch(() => (entries = []));
+    }
+    return loading;
+  }
+
+  const escapeHtml = (text: string) =>
+    text.replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+    );
+
+  const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  /** 매칭 구간만 <mark> 로 감싸고 나머지는 이스케이프합니다. */
+  function highlight(text: string, re: RegExp | null): string {
+    if (!re) return escapeHtml(text);
+    let out = '';
+    let last = 0;
+    let match: RegExpExecArray | null;
+    re.lastIndex = 0;
+    while ((match = re.exec(text)) !== null) {
+      out += escapeHtml(text.slice(last, match.index)) + '<mark>' + escapeHtml(match[0]) + '</mark>';
+      last = match.index + match[0].length;
+      if (match[0].length === 0) re.lastIndex += 1;
+    }
+    return out + escapeHtml(text.slice(last));
+  }
+
+  /** 본문에서 첫 매칭 주변만 잘라 미리보기로 씁니다. */
+  function snippet(body: string, terms: string[]): string {
+    const lower = body.toLowerCase();
+    let at = -1;
+    for (const term of terms) {
+      const found = lower.indexOf(term);
+      if (found !== -1 && (at === -1 || found < at)) at = found;
+    }
+    if (at === -1) return body.slice(0, 160);
+    const start = Math.max(0, at - 60);
+    const text = body.slice(start, start + 180);
+    return (start > 0 ? '… ' : '') + text + (start + 180 < body.length ? ' …' : '');
+  }
+
+  function score(entry: Entry, terms: string[]): number {
+    const title = entry.title.toLowerCase();
+    const description = entry.description.toLowerCase();
+    const meta = [entry.category, ...entry.tags].join(' ').toLowerCase();
+    const body = entry.body.toLowerCase();
+
+    let total = 0;
+    for (const term of terms) {
+      let hit = 0;
+      if (title.includes(term)) hit += 10;
+      if (meta.includes(term)) hit += 5;
+      if (description.includes(term)) hit += 3;
+      if (body.includes(term)) hit += 1;
+      if (hit === 0) return 0; // 모든 검색어가 어딘가에는 있어야 합니다.
+      total += hit;
+    }
+    return total;
+  }
+
+  function render(query: string, matched: Entry[], terms: string[]) {
+    const re = terms.length ? new RegExp(`(${terms.map(escapeRegExp).join('|')})`, 'gi') : null;
+
+    status.textContent = `"${query}" — ${matched.length}개`;
+
+    if (matched.length === 0) {
+      results.innerHTML = '<p class="empty">일치하는 글이 없습니다.</p>';
+      return;
+    }
+
+    results.innerHTML = `<ul class="post-list">${matched
+      .map((entry) => {
+        const tags = entry.tags.map((tag) => `#${tag}`).join(' ');
+        return `
+          <li>
+            <article class="post-item search-hit">
+              <div class="post-item__meta">
+                <time datetime="${entry.date}">${entry.date}</time>
+                <span aria-hidden="true">·</span>
+                <span>${escapeHtml(entry.category)}</span>
+              </div>
+              <h3 class="post-item__title">
+                <a href="${postBase}/${encodeURI(entry.slug)}">${highlight(entry.title, re)}</a>
+              </h3>
+              <p class="post-item__desc">${highlight(
+                entry.description || snippet(entry.body, terms),
+                re
+              )}</p>
+              ${tags ? `<div class="post-item__meta" style="margin-top:.5rem">${highlight(tags, re)}</div>` : ''}
+            </article>
+          </li>`;
+      })
+      .join('')}</ul>`;
+  }
+
+  async function run(query: string) {
+    const trimmed = query.trim();
+
+    if (trimmed.length === 0) {
+      status.textContent = '';
+      results.innerHTML = '';
+      return;
+    }
+
+    status.textContent = '찾는 중…';
+    const data = await loadIndex();
+    const terms = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
+
+    const matched = data
+      .map((entry) => ({ entry, value: score(entry, terms) }))
+      .filter((row) => row.value > 0)
+      .sort((a, b) => b.value - a.value || b.entry.date.localeCompare(a.entry.date))
+      .map((row) => row.entry);
+
+    render(trimmed, matched, terms);
+  }
+
+  // 입력이 멈춘 뒤에 한 번만 검색합니다.
+  let timer: number | undefined;
+  input.addEventListener('input', () => {
+    window.clearTimeout(timer);
+    const query = input.value;
+    timer = window.setTimeout(() => {
+      run(query);
+      const next = new URL(window.location.href);
+      if (query.trim()) next.searchParams.set('q', query.trim());
+      else next.searchParams.delete('q');
+      window.history.replaceState({}, '', next);
+    }, 180);
+  });
+
+  // /search?q=파이썬 처럼 들어오면 바로 검색합니다.
+  const initial = new URL(window.location.href).searchParams.get('q');
+  if (initial) {
+    input.value = initial;
+    run(initial);
+  }
+</script>

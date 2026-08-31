@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_AUTHOR, SOCIALS, url } from '../consts';
+import { getPublishedPosts, groupByCategory, groupByTag } from '../utils/posts';
+
+const posts = await getPublishedPosts();
+const categories = groupByCategory(posts);
+const tags = groupByTag(posts);
+const firstPost = posts.at(-1);
+---
+
+<BaseLayout title="소개" description={`${SITE_AUTHOR} 의 학습 기록 블로그 소개`}>
+  <div class="section-head">
+    <h2>소개</h2>
+  </div>
+
+  <div class="prose">
+    <p>
+      안녕하세요, <strong>{SITE_AUTHOR}</strong> 입니다.
+      배운 내용을 잊지 않기 위해, 그리고 나중에 다시 찾아보기 위해 이곳에 기록합니다.
+    </p>
+
+    <h2>이 블로그에 쌓인 것</h2>
+    <ul>
+      <li>글 <strong>{posts.length}</strong>편</li>
+      <li>카테고리 <strong>{categories.length}</strong>개 · 태그 <strong>{tags.length}</strong>개</li>
+      {
+        firstPost && (
+          <li>
+            첫 글: <a href={url(`/posts/${firstPost.id}`)}>{firstPost.data.title}</a>
+            {' '}({firstPost.data.pubDate.getFullYear()}년)
+          </li>
+        )
+      }
+    </ul>
+
+    <h2>주로 다루는 주제</h2>
+    {
+      categories.length > 0 ? (
+        <ul>
+          {categories.map((category) => (
+            <li>
+              <a href={url(`/categories/${category.slug}`)}>{category.name}</a> — {category.posts.length}편
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="muted">아직 글이 없습니다.</p>
+      )
+    }
+
+    <h2>연락</h2>
+    <ul>
+      {SOCIALS.map((social) => (
+        <li>
+          {social.label}: <a href={social.href} target="_blank" rel="noopener">{social.href}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

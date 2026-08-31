@@ -1,0 +1,25 @@
+---
+import { url, slugify } from '../consts';
+
+interface Props {
+  tags: string[];
+  /** 태그 옆에 붙일 글 수 (태그 목록 페이지에서 사용) */
+  counts?: Record<string, number>;
+  class?: string;
+}
+
+const { tags, counts, class: className = '' } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <div class={`tag-row ${className}`}>
+      {tags.map((tag) => (
+        <a class="tag" href={url(`/tags/${slugify(tag)}`)}>
+          <span>#{tag}</span>
+          {counts && <span class="tag__count">{counts[tag]}</span>}
+        </a>
+      ))}
+    </div>
+  )
+}

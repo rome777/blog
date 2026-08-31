@@ -1,0 +1,64 @@
+---
+import { GISCUS } from '../consts';
+
+// repoId / categoryId 가 채워지고 enabled 가 true 일 때만 렌더링합니다.
+const ready = GISCUS.enabled && Boolean(GISCUS.repoId) && Boolean(GISCUS.categoryId);
+---
+
+{
+  ready && (
+    <section class="giscus" aria-label="댓글">
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={GISCUS.repo}
+        data-repo-id={GISCUS.repoId}
+        data-category={GISCUS.category}
+        data-category-id={GISCUS.categoryId}
+        data-mapping={GISCUS.mapping}
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang={GISCUS.lang}
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async
+      />
+
+      <script is:inline>
+        (function () {
+          // 블로그 테마를 바꾸면 giscus iframe 테마도 따라가게 합니다.
+          function sync() {
+            var theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+            var frame = document.querySelector('iframe.giscus-frame');
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(
+              { giscus: { setConfig: { theme: theme } } },
+              'https://giscus.app'
+            );
+          }
+
+          new MutationObserver(sync).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+          });
+
+          // iframe 이 준비됐다는 신호를 받으면 한 번 맞춰줍니다.
+          window.addEventListener('message', function (event) {
+            if (event.origin === 'https://giscus.app' && event.data && event.data.giscus) sync();
+          });
+        })();
+      </script>
+    </section>
+  )
+}
+
+<style>
+  .giscus {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

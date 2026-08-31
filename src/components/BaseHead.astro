@@ -1,0 +1,74 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_AUTHOR, url } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** 글 상세 페이지면 'article' */
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${SITE_TITLE}` : SITE_TITLE;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<meta name="author" content={SITE_AUTHOR} />
+<link rel="canonical" href={canonical} />
+
+<link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+<link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={url('/rss.xml')} />
+<link rel="sitemap" href={url('/sitemap-index.xml')} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:title" content={title ?? SITE_TITLE} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="ko_KR" />
+{publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title ?? SITE_TITLE} />
+<meta name="twitter:description" content={description} />
+
+<!-- 한글 본문용 Pretendard -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+/>
+
+<!--
+  테마를 body 렌더 전에 확정해서 새로고침 시 흰 화면이 번쩍이는 걸 막습니다.
+  is:inline 이라 번들링되지 않고 그대로 head 에 들어갑니다.
+-->
+<script is:inline>
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (e) {
+      document.documentElement.dataset.theme = 'light';
+    }
+  })();
+</script>

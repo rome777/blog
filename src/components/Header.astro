@@ -1,0 +1,34 @@
+---
+import { SITE_TITLE, NAV, url } from '../consts';
+import ThemeToggle from './ThemeToggle.astro';
+
+/** 뒤쪽 슬래시를 떼서 경로를 비교 가능한 형태로 맞춥니다. */
+const normalize = (path: string) => path.replace(/\/+$/, '') || '/';
+
+const current = normalize(Astro.url.pathname);
+const home = normalize(url('/'));
+
+function isActive(href: string): boolean {
+  const target = normalize(url(href));
+  if (target === home) return current === home;
+  return current === target || current.startsWith(`${target}/`);
+}
+---
+
+<header class="site-header">
+  <div class="container wide site-header__inner">
+    <a class="site-header__brand" href={url('/')}>{SITE_TITLE}</a>
+
+    <nav class="site-nav" aria-label="주요 메뉴">
+      {
+        NAV.map((item) => (
+          <a href={url(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <ThemeToggle />
+  </div>
+</header>
