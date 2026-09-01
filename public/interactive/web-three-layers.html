@@ -348,7 +348,7 @@
       var end=performance.now()+2000;
       while(performance.now()<end){ /* 일꾼이 여기 묶여 있습니다 */ }
       jobState.textContent='완료';
-      demoLog.textContent='동기 완료 — 2초 동안 원이 멈췄습니다. 그동안 누른 클릭은 줄을 서 있다가 지금 처리됐습니다.';
+      demoLog.innerHTML='동기 완료 — 2초 동안 원이 멈췄습니다.<br>그동안 누른 클릭은 줄을 서 있다가 지금 처리됐습니다.';
     },30);
   });
 
@@ -359,7 +359,7 @@
     setTimeout(function(){
       jobState.textContent='완료';
       runSync.disabled=false; runAsync.disabled=false;
-      demoLog.textContent='비동기 완료 — 걸린 시간은 똑같이 2초입니다. 기다리는 동안 화면이 살아 있었을 뿐입니다.';
+      demoLog.innerHTML='비동기 완료 — 걸린 시간은 똑같이 2초입니다.<br>기다리는 동안 화면이 살아 있었을 뿐입니다.';
     },2000);
   });
 
