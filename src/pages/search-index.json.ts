@@ -12,6 +12,7 @@ function toPlainText(markdown: string): string {
     .replace(/`[^`]*`/g, ' ')              // 인라인 코드
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ') // 이미지
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // 링크는 글자만 남김
+    .replace(/<[^>]+>/g, ' ')              // iframe 등 글 안에 직접 쓴 HTML 태그
     .replace(/^\s{0,3}#{1,6}\s+/gm, '')    // 헤딩 기호
     .replace(/[*_>~|-]+/g, ' ')            // 나머지 마크다운 기호
     .replace(/\s+/g, ' ')

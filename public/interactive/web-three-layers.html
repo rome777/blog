@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세 겹의 웹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF; --sheet:#F7F7F5; --ink:#17181A; --muted:#55595F; --rule:#DCDEE1;
+    --html:#1B4EA0; --css:#C21E68; --js:#0E7A55;
+    --sans:"Noto Sans KR","Malgun Gothic",-apple-system,"Apple SD Gothic Neo",system-ui,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,"Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-weight:500;font-size:17px;line-height:1.8}
+  .mono,code{font-family:var(--mono)}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+  p{max-width:64ch;margin:0 0 16px}
+  b{font-weight:700}
+
+  header{padding:52px 0 24px}
+  .marks{display:flex;gap:7px;margin-bottom:18px}
+  .marks span{height:7px;width:42px;border-radius:2px}
+  h1{font-size:1.9rem;font-weight:700;line-height:1.35;margin:0 0 10px;letter-spacing:-.01em}
+  header p{color:var(--muted);font-size:.98rem;margin:0}
+
+  section{padding:36px 0 8px;border-top:1px solid var(--rule)}
+  h2{font-size:1.32rem;font-weight:700;line-height:1.45;margin:0 0 14px;letter-spacing:-.01em}
+
+  .chip{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:2px 7px;
+    color:#fff;font-weight:700;border-radius:2px;vertical-align:2px}
+  .chip.h{background:var(--html)} .chip.c{background:var(--css)} .chip.j{background:var(--js)}
+  .note{color:var(--muted);font-size:.93rem}
+
+  .panel{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:18px;margin:22px 0}
+  .cap{margin:0 0 14px;color:var(--muted);font-size:.9rem;max-width:58ch}
+  .status{margin:12px 0 0;font-size:.9rem;color:var(--muted);max-width:58ch;min-height:1.7em}
+
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.94rem}
+  th,td{border-bottom:1px solid var(--rule);padding:11px;text-align:left;vertical-align:top}
+  th{font-weight:700;font-size:.85rem;color:var(--muted)}
+  td:first-child{white-space:nowrap;color:var(--muted)}
+  td.h{border-left:3px solid var(--html)} td.c{border-left:3px solid var(--css)} td.j{border-left:3px solid var(--js)}
+  .scroller{overflow-x:auto}
+
+  button,input{font-family:inherit}
+  .row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+
+  .sw{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);background:#fff;
+    padding:8px 14px;border-radius:3px;cursor:pointer;font-size:.92rem;color:var(--ink)}
+  .sw:hover{border-color:var(--ink)}
+  .sw .dot{width:11px;height:11px;border-radius:50%;border:1.5px solid currentColor}
+  .sw[data-on="1"] .dot{background:currentColor}
+  .sw[data-layer="html"]{color:var(--html)} .sw[data-layer="css"]{color:var(--css)} .sw[data-layer="js"]{color:var(--js)}
+  .sw .lb{color:var(--ink)}
+  .sw[data-on="0"] .lb{color:var(--muted);text-decoration:line-through}
+  iframe{width:100%;height:270px;border:1px solid var(--rule);border-radius:3px;background:#fff;margin-top:13px}
+
+  .bx{border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:#fff}
+  .bx-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--sheet);
+    border-bottom:1px solid var(--rule)}
+  .dots{display:flex;gap:5px;flex:none}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--rule)}
+  .bx-url{flex:1;min-width:0;font-family:var(--mono);font-size:.76rem;background:#fff;
+    border:1px solid var(--rule);border-radius:20px;padding:4px 12px;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bx-view{padding:18px;transition:background .3s ease;min-height:150px}
+  .bx-view.flash{background:rgba(27,78,160,.13);transition:none}
+  .age{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+  .age span{font-size:.8rem;color:var(--muted)}
+  .age b{font-family:var(--mono);font-size:1.7rem;font-weight:700;color:var(--ink)}
+  #dArea{padding-top:13px;border-top:1px solid var(--rule);font-size:.9rem;color:var(--muted);
+    transition:background .3s ease}
+  #dArea.flash{background:rgba(14,122,85,.15);transition:none}
+  #dArea ul{margin:5px 0 0;padding-left:18px}
+  .lk-btn{font-size:.88rem;padding:8px 14px;border-radius:3px;cursor:pointer;
+    border:1px solid var(--html);background:#fff;color:var(--html)}
+  .js-btn{font-size:.88rem;padding:8px 14px;border-radius:3px;cursor:pointer;
+    border:1px solid var(--js);background:var(--js);color:#fff}
+  .js-btn.alt{background:#fff;color:var(--js)}
+  .cbtn{font-size:.88rem;padding:6px 15px;border:1px solid var(--rule);background:#fff;
+    border-radius:3px;cursor:pointer;color:var(--ink)}
+  .cbtn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .lbl{font-size:.85rem;color:var(--muted)}
+  .sched{display:grid;grid-template-columns:78px 1fr;gap:8px;align-items:start;margin-top:4px}
+  .lanecol div{font-size:.74rem;color:var(--muted);height:26px;line-height:26px;font-family:var(--mono)}
+  canvas{width:100%;display:block;border:1px solid var(--rule);border-radius:3px;background:#fff}
+  .speed{display:block;margin-top:14px;font-size:.85rem;color:var(--muted)}
+  .speed b{font-family:var(--mono);color:var(--ink);font-weight:700}
+  .speed input{width:100%;accent-color:var(--ink);margin-top:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:15px;margin-top:12px;font-size:.82rem;color:var(--muted)}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+  .btn{font-size:.92rem;padding:9px 16px;border-radius:3px;cursor:pointer;
+    border:1px solid var(--ink);background:var(--ink);color:#fff}
+  .btn.ghost{background:#fff;color:var(--ink)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .spinbox{display:flex;align-items:center;gap:14px;margin-top:16px;font-size:.9rem;color:var(--muted)}
+  .spinner{width:38px;height:38px;border:3px solid var(--rule);border-top-color:var(--js);border-radius:50%;flex:none}
+
+  .mono{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;
+    padding:1px 6px;font-size:.86rem}
+
+  footer{padding:26px 0 64px;border-top:1px solid var(--rule)}
+  footer .src{margin:0;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="marks">
+    <span style="background:#1B4EA0"></span><span style="background:#C21E68"></span><span style="background:#0E7A55"></span>
+  </div>
+  <h1>세 겹의 웹</h1>
+  <p>1~3강 요약. 눌러보면서 확인합니다.</p>
+</header>
+
+<main class="wrap">
+
+<section>
+  <h2>구조 · 표현 · 동작</h2>
+  <p>웹페이지는 세 겹입니다. <b>무엇이</b> 있는지(HTML), <b>어떻게 보이는지</b>(CSS), <b>무엇이 바뀌는지</b>(JavaScript, 이하 JS).</p>
+
+  <div class="panel">
+    <p class="cap">겹을 하나씩 꺼보세요.</p>
+    <div class="row">
+      <button class="sw" data-layer="html" data-on="1" type="button"><span class="dot"></span><span class="lb">HTML · 구조</span></button>
+      <button class="sw" data-layer="css" data-on="1" type="button"><span class="dot"></span><span class="lb">CSS · 표현</span></button>
+      <button class="sw" data-layer="js" data-on="1" type="button"><span class="dot"></span><span class="lb">JS · 동작</span></button>
+    </div>
+    <iframe id="stripFrame" title="세 겹 미리보기" sandbox="allow-scripts"></iframe>
+    <p class="status" id="stripStatus"></p>
+  </div>
+
+</section>
+
+<section>
+  <h2>하이퍼링크와 JS</h2>
+  <p>하이퍼텍스트는 <b>문서를 잇는 발상</b>, JS는 <b>프로그래밍 언어</b>입니다. 하이퍼링크는 <b>어디로 갈지</b>, JS는 <b>여기서 뭐가 바뀔지</b>를 정합니다.</p>
+
+  <div class="panel">
+    <p class="cap">문서가 열린 지 몇 초인지 세는 시계입니다. 이게 0으로 돌아가는지 아닌지가 전부입니다.</p>
+    <div class="bx">
+      <div class="bx-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="bx-url" id="dUrl"></span>
+      </div>
+      <div class="bx-view" id="dView">
+        <div class="age"><span>이 문서가 열린 지</span><b id="dAge">0.0초</b></div>
+        <div id="dArea"></div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="lk-btn" id="actLink" type="button"></button>
+      <button class="js-btn" id="actJs" type="button"></button>
+      <button class="js-btn alt" id="actSpa" type="button"></button>
+    </div>
+    <p class="status" id="dLog"></p>
+  </div>
+
+</section>
+
+<section>
+  <h2>기다림과 일손</h2>
+  <p><b>동기</b>는 전화, <b>비동기</b>는 문자입니다. JS는 일꾼이 한 명(<b>싱글 스레드</b>)이라 동기로 기다리면 화면 전체가 멈춥니다.</p>
+
+  <div class="panel">
+    <p class="cap">원은 매 프레임 다시 그려집니다. 실행 중에 “클릭 반응”을 눌러보세요.</p>
+    <div class="row">
+      <button class="btn" id="runSync" type="button">동기로 2초 작업</button>
+      <button class="btn" id="runAsync" type="button">비동기로 2초 작업</button>
+      <button class="btn ghost" id="clickTest" type="button">클릭 반응 (0)</button>
+    </div>
+    <div class="spinbox">
+      <div class="spinner" id="spin"></div>
+      <span id="jobState">대기 중</span>
+    </div>
+    <p class="status" id="demoLog"></p>
+  </div>
+
+  <p><b>프로세스</b>는 작업실, <b>스레드</b>는 그 안의 일꾼, <b>코어</b>는 CPU의 물리적 일손입니다. 코어 하나가 실행 자리를 둘로 나눠 쓰는 것이 <b>하이퍼스레딩</b>입니다.</p>
+  <div class="panel">
+    <p class="cap">블록 하나가 시간 조각 하나입니다. 색은 프로세스, 회색은 기다리느라 논 시간입니다.</p>
+    <div class="row" style="margin-bottom:10px">
+      <span class="lbl">물리 코어</span>
+      <button class="cbtn on" data-c="1" type="button">1개</button>
+      <button class="cbtn" data-c="2" type="button">2개</button>
+      <span class="lbl" style="margin-left:6px">하이퍼스레딩</span>
+      <button class="cbtn" id="htBtn" type="button">꺼짐</button>
+    </div>
+    <div class="sched">
+      <div class="lanecol" id="laneLabels"></div>
+      <canvas id="cpu"></canvas>
+    </div>
+    <label class="speed">
+      <span>전환 속도 <b id="vSlice">200ms</b></span>
+      <input type="range" id="sSpeed" min="0" max="100" value="24">
+    </label>
+    <div class="legend" id="legend"></div>
+    <p class="status" id="cpuLog"></p>
+  </div>
+
+</section>
+
+<footer class="wrap">
+  <p class="src">바이브 코딩으로 웹 만들기 · 1~3강</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* 1. 세 겹 벗기기 */
+  var st={html:true,css:true,js:true};
+  var frame=document.getElementById('stripFrame'), statusEl=document.getElementById('stripStatus');
+
+  var BODY='<h1>진료 안내</h1><p>오늘 접수 가능한 창구입니다.</p>'
+    +'<div class="cards"><div class="card"><h2>예약</h2><p>전화 · 온라인</p></div>'
+    +'<div class="card"><h2>제증명 발급</h2><p>진단서 · 소견서</p></div></div>'
+    +'<button id="more">창구 더 보기</button>'
+    +'<ul id="extra" hidden><li>수납</li><li>오시는 길</li></ul>';
+
+  var CSS='body{font-family:"Noto Sans KR","Malgun Gothic",system-ui,sans-serif;font-weight:500;margin:0;padding:20px;'
+    +'color:#1F2124;background:#fff;line-height:1.7}h1{font-size:1.2rem;margin:0 0 4px;font-weight:700}'
+    +'p{margin:0 0 14px;color:#6B6F76;font-size:.85rem}.cards{display:flex;gap:10px;margin-bottom:14px}'
+    +'.card{flex:1;border:1px solid #DFE1E4;border-radius:3px;padding:12px;background:#F7F7F5}'
+    +'.card h2{font-size:.9rem;margin:0 0 4px;font-weight:700}.card p{margin:0;font-size:.78rem}'
+    +'button{font:inherit;font-size:.85rem;padding:7px 14px;border:1px solid #1F2124;border-radius:3px;'
+    +'background:#1F2124;color:#fff;cursor:pointer}ul{margin:12px 0 0;padding-left:18px;font-size:.85rem}';
+
+  var JS="var b=document.getElementById('more'),x=document.getElementById('extra');"
+    +"if(b&&x){b.addEventListener('click',function(){x.hidden=!x.hidden;"
+    +"b.textContent=x.hidden?'창구 더 보기':'접기';});}";
+
+  var MSG={
+    '111':'세 겹이 다 있습니다. 버튼을 눌러보세요.',
+    '101':'브라우저 기본 모양만 남았습니다. 1991년 최초의 웹사이트가 이랬습니다.',
+    '110':'버튼은 보이지만 눌러도 열리지 않습니다.',
+    '100':'정보만 남은 문서입니다.',
+    '011':'구조가 없으면 표현할 것도 반응할 것도 없습니다.',
+    '001':'스타일이 걸릴 요소가 없습니다.',
+    '010':'이벤트를 붙일 버튼이 없습니다.',
+    '000':'빈 문서입니다.'
+  };
+
+  function render(){
+    var d='<!doctype html><html lang="ko"><head><meta charset="utf-8">';
+    if(st.html&&st.css) d+='<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700&display=swap"><style>'+CSS+'</style>';
+    d+='</head><body>';
+    if(st.html) d+=BODY;
+    if(st.html&&st.js) d+='<scr'+'ipt>'+JS+'</scr'+'ipt>';
+    frame.srcdoc=d+'</body></html>';
+    statusEl.textContent=MSG[(st.html?'1':'0')+(st.css?'1':'0')+(st.js?'1':'0')]||'';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(b){
+    b.addEventListener('click',function(){
+      var k=b.getAttribute('data-layer');
+      st[k]=!st[k];
+      b.setAttribute('data-on',st[k]?'1':'0');
+      b.setAttribute('aria-pressed',st[k]?'true':'false');
+      render();
+    });
+  });
+  render();
+
+  /* 2. 하이퍼링크 vs JS */
+  var DOCS={
+    guide:{path:'/안내',name:'진료 안내',
+      few:'<b>진료 안내</b><ul><li>예약</li><li>제증명 발급</li></ul>',
+      many:'<b>진료 안내</b><ul><li>예약</li><li>제증명 발급</li><li>수납</li><li>오시는 길</li></ul>'},
+    booking:{path:'/예약',name:'예약 안내',
+      few:'<b>예약 안내</b><ul><li>전화 02-000-0000</li><li>온라인 폼</li></ul>',
+      many:'<b>예약 안내</b><ul><li>전화 02-000-0000</li><li>온라인 폼</li><li>방문 접수</li><li>취소 · 변경</li></ul>'}
+  };
+  var dView=document.getElementById('dView'), dArea=document.getElementById('dArea'),
+      dUrl=document.getElementById('dUrl'), dAge=document.getElementById('dAge'),
+      dLog=document.getElementById('dLog'), actLink=document.getElementById('actLink'),
+      actJs=document.getElementById('actJs'), actSpa=document.getElementById('actSpa');
+  var cur='guide', open2=false, openedAt=performance.now(), loading=false;
+
+  function other(){ return cur==='guide' ? 'booking' : 'guide'; }
+  function flash(el){ el.classList.add('flash'); setTimeout(function(){el.classList.remove('flash');},70); }
+
+  function paint(){
+    var d=DOCS[cur], o=DOCS[other()];
+    dArea.innerHTML = open2 ? d.many : d.few;
+    dUrl.textContent = 'https://hospital.example' + d.path;
+    actLink.textContent = o.name + '로 이동 (하이퍼링크)';
+    actSpa.textContent = o.name + '로 이동 (JS)';
+    actJs.textContent = open2 ? '목록 접기 (JS)' : '목록 더 보기 (JS)';
+  }
+  function age(){
+    if(!loading) dAge.textContent = ((performance.now()-openedAt)/1000).toFixed(1) + '초';
+    requestAnimationFrame(age);
+  }
+  requestAnimationFrame(age);
+
+  actLink.addEventListener('click',function(){
+    if(loading) return;
+    loading=true; dAge.textContent='—';
+    dArea.innerHTML='<span style="opacity:.45">문서를 받는 중…</span>';
+    dUrl.textContent='https://hospital.example' + DOCS[other()].path;
+    setTimeout(function(){
+      cur=other(); open2=false; loading=false; openedAt=performance.now();
+      paint(); flash(dView);
+      dLog.textContent='하이퍼링크 — 문서를 새로 받았습니다. 시계가 0으로 돌아갔습니다.';
+    },600);
+  });
+
+  actJs.addEventListener('click',function(){
+    open2=!open2; paint(); flash(dArea);
+    dLog.textContent='JS — 목록만 바뀌었습니다. 시계는 그대로 갑니다.';
+  });
+
+  actSpa.addEventListener('click',function(){
+    cur=other(); open2=false; paint(); flash(dArea);
+    dLog.textContent='JS + 주소 변경 — 주소는 바뀌었는데 시계는 안 멈췄습니다. 문서가 처음 것 그대로라는 뜻입니다.';
+  });
+
+  paint();
+  dLog.textContent='세 버튼을 차례로 눌러보세요.';
+
+  /* 3. 동기 / 비동기 */
+  var spin=document.getElementById('spin'), jobState=document.getElementById('jobState'),
+      demoLog=document.getElementById('demoLog'), clickTest=document.getElementById('clickTest'),
+      runSync=document.getElementById('runSync'), runAsync=document.getElementById('runAsync');
+  var angle=0, clicks=0;
+
+  function tick(){
+    angle=(angle+6)%360;
+    spin.style.transform='rotate('+angle+'deg)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  clickTest.addEventListener('click',function(){ clicks++; clickTest.textContent='클릭 반응 ('+clicks+')'; });
+
+  runSync.addEventListener('click',function(){
+    demoLog.textContent='동기 시작 — 지금 “클릭 반응”을 눌러보세요.';
+    jobState.textContent='실행 중';
+    setTimeout(function(){
+      var end=performance.now()+2000;
+      while(performance.now()<end){ /* 일꾼이 여기 묶여 있습니다 */ }
+      jobState.textContent='완료';
+      demoLog.textContent='동기 완료 — 2초 동안 원이 멈췄습니다. 그동안 누른 클릭은 줄을 서 있다가 지금 처리됐습니다.';
+    },30);
+  });
+
+  runAsync.addEventListener('click',function(){
+    demoLog.textContent='비동기 시작 — 요청만 걸어두고 넘어갔습니다.';
+    jobState.textContent='기다리는 중';
+    runSync.disabled=true; runAsync.disabled=true;
+    setTimeout(function(){
+      jobState.textContent='완료';
+      runSync.disabled=false; runAsync.disabled=false;
+      demoLog.textContent='비동기 완료 — 걸린 시간은 똑같이 2초입니다. 기다리는 동안 화면이 살아 있었을 뿐입니다.';
+    },2000);
+  });
+
+  /* 4. 코어 · 프로세스 · 스레드 */
+  var PROC=[
+    {name:'크롬 탭', n:3, color:'#2A7F8F'},
+    {name:'음악 앱', n:2, color:'#C9711F'}
+  ];
+  var THREADS=[];
+  PROC.forEach(function(pr,pi){ for(var i=0;i<pr.n;i++) THREADS.push(pi); });
+
+  var cv=document.getElementById('cpu'), ctx=cv.getContext('2d'),
+      laneLabels=document.getElementById('laneLabels'), legend=document.getElementById('legend'),
+      sSpeed=document.getElementById('sSpeed'), vSlice=document.getElementById('vSlice'),
+      cpuLog=document.getElementById('cpuLog'), htBtn=document.getElementById('htBtn');
+  var COLS=80, ROW=26, EMPTY=-1, STALL=-2;
+  var cores=1, ht=false, lanes=1, hist=[], qp=0, slice=200, acc=0, last=performance.now(), utilAt=0;
+
+  legend.innerHTML = PROC.map(function(pr){
+    return '<span><i style="background:'+pr.color+'"></i>'+pr.name+' · OS 스레드 '+pr.n+'개</span>';
+  }).join('') + '<span><i style="background:#DCDEE1"></i>대기</span>'
+    + '<span>코어가 일한 비율 <b id="vUtil" style="color:#17181A">—</b></span>';
+  var vUtil=document.getElementById('vUtil');
+
+  function lpc(){ return ht ? 2 : 1; }
+
+  function buildLanes(){
+    lanes = cores * lpc();
+    hist=[];
+    for(var l=0;l<lanes;l++){ var a=[]; for(var i=0;i<COLS;i++) a.push(EMPTY); hist.push(a); }
+    laneLabels.innerHTML='';
+    for(var l2=0;l2<lanes;l2++){
+      var d=document.createElement('div');
+      d.textContent = ht ? ('코어'+(Math.floor(l2/2)+1)+'-'+(l2%2 ? 'B' : 'A')) : ('코어 '+(l2+1));
+      laneLabels.appendChild(d);
+    }
+    cv.style.height=(lanes*ROW)+'px';
+  }
+
+  function step(){
+    for(var l=0;l<lanes;l++){
+      var t=THREADS[qp % THREADS.length]; qp++;
+      hist[l].shift();
+      hist[l].push(Math.random() < 0.32 ? STALL : t);
+    }
+  }
+
+  function util(){
+    var k=lpc(), busy=0;
+    for(var c=0;c<cores;c++){
+      for(var i=0;i<COLS;i++){
+        for(var m=0;m<k;m++){
+          if(hist[c*k+m][i] >= 0){ busy++; break; }
+        }
+      }
+    }
+    return Math.round(busy/(cores*COLS)*100);
+  }
+
+  function draw(){
+    var dpr=window.devicePixelRatio||1, w=cv.clientWidth, h=lanes*ROW;
+    if(!w) return;
+    if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){
+      cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+    }
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+    var cw=w/COLS;
+    for(var l=0;l<lanes;l++){
+      for(var i=0;i<COLS;i++){
+        var v=hist[l][i];
+        ctx.fillStyle = v===EMPTY ? '#F7F7F5' : (v===STALL ? '#DCDEE1' : PROC[v].color);
+        ctx.fillRect(i*cw, l*ROW+4, Math.max(cw-0.8,0.6), ROW-8);
+      }
+    }
+    if(ht && cores>1){
+      ctx.fillStyle='#DCDEE1';
+      for(var c=1;c<cores;c++) ctx.fillRect(0, c*2*ROW-0.5, w, 1);
+    }
+  }
+
+  function loop(now){
+    var dt=now-last; last=now; acc+=dt;
+    var guard=0;
+    while(acc>=slice && guard++<300){ acc-=slice; step(); }
+    draw();
+    if(now-utilAt>300){ utilAt=now; vUtil.textContent=util()+'%'; }
+    requestAnimationFrame(loop);
+  }
+
+  function note(){
+    var t = ht
+      ? '코어 하나가 실행 자리를 둘로 나눕니다. 한쪽이 회색일 때 다른 쪽이 그 빈틈을 채웁니다 — 코어가 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.'
+      : '코어 하나는 한 번에 하나씩 처리합니다. 회색은 메모리를 기다리느라 논 시간입니다.';
+    if(slice<=40) t += ' 이 속도에서는 전부 동시에 도는 것처럼 보입니다.';
+    cpuLog.textContent=t;
+  }
+
+  function setSpeed(){
+    slice=Math.round(700*Math.pow(0.955,+sSpeed.value))+4;
+    vSlice.textContent=slice+'ms';
+    note();
+  }
+  sSpeed.addEventListener('input', setSpeed);
+
+  htBtn.addEventListener('click', function(){
+    ht=!ht;
+    htBtn.textContent = ht ? '켜짐' : '꺼짐';
+    htBtn.className = ht ? 'cbtn on' : 'cbtn';
+    buildLanes(); note();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.cbtn[data-c]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.cbtn[data-c]'),function(o){o.classList.remove('on');});
+      b.classList.add('on');
+      cores=+b.getAttribute('data-c');
+      buildLanes();
+    });
+  });
+
+  buildLanes(); setSpeed();
+  requestAnimationFrame(function(t){ last=t; requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

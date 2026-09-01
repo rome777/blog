@@ -653,6 +653,21 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+/* ---------- 본문에 끼워 넣는 외부 인터랙티브 페이지 ---------- */
+.embed-frame {
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+}
+.embed-frame iframe {
+  display: block;
+  width: 100%;
+  height: 2500px;
+  border: 0;
+}
+
 /* ---------- 글 하단 ---------- */
 .post-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
 
