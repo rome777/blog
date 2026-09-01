@@ -402,12 +402,42 @@
     cv.style.height=(lanes*ROW)+'px';
   }
 
-  function step(){
-    for(var l=0;l<lanes;l++){
+  var STALL_P=0.32;
+
+  /*
+    한 코어가 한 시간 조각에 무엇을 했는지 정합니다.
+    코어 안의 실행 자리는 하나뿐이라, 하이퍼스레딩이 켜져도 같은 순간에
+    두 스레드가 함께 실행되지는 않습니다. 한쪽이 메모리를 기다려 멈추면
+    (STALL) 그 틈에 다른 쪽이 실행 자리를 대신 씁니다.
+    그래서 코어의 처리량이 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.
+  */
+  function stepCore(c){
+    var k=lpc(), slot=[], m;
+    for(m=0;m<k;m++) slot.push(STALL);
+
+    // 이번 조각에 실행 자리를 먼저 잡는 스레드
+    var first=0;
+    if(k>1) first = (qp % 2);
+
+    for(m=0;m<k;m++){
+      var lane=(first+m)%k;
       var t=THREADS[qp % THREADS.length]; qp++;
-      hist[l].shift();
-      hist[l].push(Math.random() < 0.32 ? STALL : t);
+      if(Math.random() >= STALL_P){
+        // 실행에 성공했습니다. 실행 자리는 하나뿐이니 여기서 끝냅니다.
+        slot[lane]=t;
+        break;
+      }
+      // 멈췄습니다(회색). 자리가 비었으니 다음 스레드가 이어서 시도합니다.
     }
+
+    for(m=0;m<k;m++){
+      hist[c*k+m].shift();
+      hist[c*k+m].push(slot[m]);
+    }
+  }
+
+  function step(){
+    for(var c=0;c<cores;c++) stepCore(c);
   }
 
   function util(){
@@ -455,7 +485,7 @@
 
   function note(){
     var t = ht
-      ? '코어 하나가 실행 자리를 둘로 나눕니다.<br>한쪽이 회색일 때 다른 쪽이 그 빈틈을 채웁니다 — 코어가 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.'
+      ? '실행 자리는 여전히 하나입니다. 같은 순간에 A와 B가 함께 실행되는 일은 없습니다.<br>대신 A가 멈추면 B가 그 자리를 이어받습니다 — 성능이 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.'
       : '코어 하나는 한 번에 하나씩 처리합니다.<br>회색은 메모리를 기다리느라 논 시간입니다.';
     if(slice<=40) t += '<br>이 속도에서는 전부 동시에 도는 것처럼 보입니다.';
     cpuLog.innerHTML=t;
