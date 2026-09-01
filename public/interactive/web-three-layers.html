@@ -390,6 +390,9 @@
     lanes = cores * lpc();
     hist=[];
     for(var l=0;l<lanes;l++){ var a=[]; for(var i=0;i<COLS;i++) a.push(EMPTY); hist.push(a); }
+    // 빈 칸부터 다시 채워나가면 비율이 0%에서 서서히 올라가는 것처럼 보여
+    // 조건을 바꾼 전후를 바로 비교할 수 없습니다. 화면 폭만큼 미리 채워둡니다.
+    for(var w=0;w<COLS;w++) step();
     laneLabels.innerHTML='';
     for(var l2=0;l2<lanes;l2++){
       var d=document.createElement('div');
