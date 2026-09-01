@@ -170,7 +170,7 @@
   <p><b>동기</b>는 전화, <b>비동기</b>는 문자입니다. <br>JS는 일꾼이 한 명(<b>싱글 스레드</b>)이라 동기로 기다리면 화면 전체가 멈춥니다.</p>
 
   <div class="panel">
-    <p class="cap">원은 매 프레임 다시 그려집니다. 실행 중에 “클릭 반응”을 눌러보세요.</p>
+    <p class="cap">원은 매 프레임 다시 그려집니다.<br>실행 중에 “클릭 반응”을 눌러보세요.</p>
     <div class="row">
       <button class="btn" id="runSync" type="button">동기로 2초 작업</button>
       <button class="btn" id="runAsync" type="button">비동기로 2초 작업</button>
@@ -185,7 +185,7 @@
 
   <p><b>프로세스</b>는 작업실, <b>스레드</b>는 그 안의 일꾼, <b>코어</b>는 CPU의 물리적 일손입니다. <br>코어 하나가 실행 자리를 둘로 나눠 쓰는 것이 <b>하이퍼스레딩</b>입니다.</p>
   <div class="panel">
-    <p class="cap">블록 하나가 시간 조각 하나입니다. 색은 프로세스, 회색은 기다리느라 논 시간입니다.</p>
+    <p class="cap">블록 하나가 시간 조각 하나입니다.<br>색은 프로세스, 회색은 기다리느라 논 시간입니다.</p>
     <div class="row" style="margin-bottom:10px">
       <span class="lbl">물리 코어</span>
       <button class="cbtn on" data-c="1" type="button">1개</button>
@@ -240,7 +240,7 @@
 
   var MSG={
     '111':'세 겹이 다 있습니다. 버튼을 눌러보세요.',
-    '101':'브라우저 기본 모양만 남았습니다. 1991년 최초의 웹사이트가 이랬습니다.',
+    '101':'브라우저 기본 모양만 남았습니다.<br>1991년 최초의 웹사이트가 이랬습니다.',
     '110':'버튼은 보이지만 눌러도 열리지 않습니다.',
     '100':'정보만 남은 문서입니다.',
     '011':'구조가 없으면 표현할 것도 반응할 것도 없습니다.',
@@ -256,7 +256,7 @@
     if(st.html) d+=BODY;
     if(st.html&&st.js) d+='<scr'+'ipt>'+JS+'</scr'+'ipt>';
     frame.srcdoc=d+'</body></html>';
-    statusEl.textContent=MSG[(st.html?'1':'0')+(st.css?'1':'0')+(st.js?'1':'0')]||'';
+    statusEl.innerHTML=MSG[(st.html?'1':'0')+(st.css?'1':'0')+(st.js?'1':'0')]||'';
   }
   Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(b){
     b.addEventListener('click',function(){
@@ -309,18 +309,18 @@
     setTimeout(function(){
       cur=other(); open2=false; loading=false; openedAt=performance.now();
       paint(); flash(dView);
-      dLog.textContent='하이퍼링크 — 문서를 새로 받았습니다. 시계가 0으로 돌아갔습니다.';
+      dLog.innerHTML='하이퍼링크 — 문서를 새로 받았습니다.<br>시계가 0으로 돌아갔습니다.';
     },600);
   });
 
   actJs.addEventListener('click',function(){
     open2=!open2; paint(); flash(dArea);
-    dLog.textContent='JS — 목록만 바뀌었습니다. 시계는 그대로 갑니다.';
+    dLog.innerHTML='JS — 목록만 바뀌었습니다.<br>시계는 그대로 갑니다.';
   });
 
   actSpa.addEventListener('click',function(){
     cur=other(); open2=false; paint(); flash(dArea);
-    dLog.textContent='JS + 주소 변경 — 주소는 바뀌었는데 시계는 안 멈췄습니다. 문서가 처음 것 그대로라는 뜻입니다.';
+    dLog.innerHTML='JS + 주소 변경 — 주소는 바뀌었는데 시계는 안 멈췄습니다.<br>문서가 처음 것 그대로라는 뜻입니다.';
   });
 
   paint();
@@ -452,10 +452,10 @@
 
   function note(){
     var t = ht
-      ? '코어 하나가 실행 자리를 둘로 나눕니다. 한쪽이 회색일 때 다른 쪽이 그 빈틈을 채웁니다 — 코어가 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.'
-      : '코어 하나는 한 번에 하나씩 처리합니다. 회색은 메모리를 기다리느라 논 시간입니다.';
-    if(slice<=40) t += ' 이 속도에서는 전부 동시에 도는 것처럼 보입니다.';
-    cpuLog.textContent=t;
+      ? '코어 하나가 실행 자리를 둘로 나눕니다.<br>한쪽이 회색일 때 다른 쪽이 그 빈틈을 채웁니다 — 코어가 두 배가 되는 게 아니라 노는 시간이 줄어듭니다.'
+      : '코어 하나는 한 번에 하나씩 처리합니다.<br>회색은 메모리를 기다리느라 논 시간입니다.';
+    if(slice<=40) t += '<br>이 속도에서는 전부 동시에 도는 것처럼 보입니다.';
+    cpuLog.innerHTML=t;
   }
 
   function setSpeed(){
