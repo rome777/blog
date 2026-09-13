@@ -41,27 +41,39 @@ const rows = posts.map((post) => {
             </li>
           )}
           <li>
-            <article class="post-item">
-              <div class="post-item__meta">
-                <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
-                <span aria-hidden="true">·</span>
-                <span>{readingTime(post.body ?? '')}분</span>
-                <a
-                  class="badge"
-                  href={url(`/categories/${categorySlug(post.data.category)}`)}
-                  title={post.data.category.replace(/\//g, ' / ')}
-                >
-                  {categorySegments(post.data.category).at(-1)}
+            <article class={`post-item ${post.data.heroImage ? 'has-thumb' : ''}`}>
+              {post.data.heroImage && (
+                <a href={url(`/posts/${post.id}`)} class="post-item__thumb-wrap" tabindex="-1" aria-hidden="true">
+                  <img
+                    src={url(post.data.heroImage)}
+                    alt={post.data.title}
+                    class="post-item__thumb"
+                    loading="lazy"
+                  />
                 </a>
+              )}
+              <div class="post-item__body">
+                <div class="post-item__meta">
+                  <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+                  <span aria-hidden="true">·</span>
+                  <span>{readingTime(post.body ?? '')}분</span>
+                  <a
+                    class="badge"
+                    href={url(`/categories/${categorySlug(post.data.category)}`)}
+                    title={post.data.category.replace(/\//g, ' / ')}
+                  >
+                    {categorySegments(post.data.category).at(-1)}
+                  </a>
+                </div>
+
+                <h3 class="post-item__title">
+                  <a href={url(`/posts/${post.id}`)}>{post.data.title}</a>
+                </h3>
+
+                {post.data.description && <p class="post-item__desc">{post.data.description}</p>}
+
+                {showTags && <TagRow tags={post.data.tags} class="post-item__tags" />}
               </div>
-
-              <h3 class="post-item__title">
-                <a href={url(`/posts/${post.id}`)}>{post.data.title}</a>
-              </h3>
-
-              {post.data.description && <p class="post-item__desc">{post.data.description}</p>}
-
-              {showTags && <TagRow tags={post.data.tags} class="post-item__tags" />}
             </article>
           </li>
         </Fragment>

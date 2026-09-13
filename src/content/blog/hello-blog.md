@@ -4,6 +4,7 @@ description: 이 블로그에 글을 추가하고 배포하는 전체 흐름을 
 pubDate: 2026-08-31
 category: 블로그
 tags: [Astro, GitHub Pages, 마크다운]
+heroImage: /images/posts/blog-main.png
 ---
 
 학습한 내용을 흘려보내지 않기 위해 블로그를 만들었습니다.

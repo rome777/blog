@@ -18,6 +18,8 @@ const blog = defineCollection({
     tags: z.array(z.string()).default([]),
     /** true 면 빌드에서 제외 (초안) */
     draft: z.boolean().default(false),
+    /** 목록·상세에 노출할 대표/타이틀 이미지 경로 (예: /images/posts/...) */
+    heroImage: z.string().optional(),
   }),
 });
 

@@ -4,12 +4,25 @@ description: 정체 없는 코스와 연비를 한 장으로 보여주는 단일
 pubDate: 2026-08-31
 category: 프로젝트
 tags: [에이전트, TMAP, Kakao, 스펙작성, 단일파일]
+heroImage: /images/posts/smooth-drive-1.png
 ---
 
 주말마다 같은 일을 반복하고 있었습니다. 지도 앱을 열어 안 막히는 길을 찾고, 주유소에서 계기판 연비를 눈으로 확인하고, 다음 주에 또 처음부터.
 그래서 **코스 탐색과 연비 기록을 한 장으로 합친 웹페이지**를 만들었습니다.
 
 결과물은 HTML 파일 하나입니다. 빌드 단계가 없고, 열면 아무것도 입력하지 않아도 추천 코스가 지도 위에 그려집니다.
+
+> 🔗 **서비스 바로가기**: [https://smooth-drive.rome777.workers.dev](https://smooth-drive.rome777.workers.dev)  
+> 📦 **GitHub 저장소**: [rome777/aiffel_test](https://github.com/rome777/aiffel_test)
+
+![주말 드라이브 코스 추천 및 연비 리포터 데스크톱 화면](/blog/images/posts/smooth-drive-1.png)
+
+*▲ 실시간 교통 정보와 통계 예측을 결합해 최적 경로와 예상 연비·주유비를 산출한 화면*
+
+<div align="center">
+  <img src="/blog/images/posts/smooth-drive-2.png" alt="모바일 뷰" width="340" style="border-radius: 12px; border: 1px solid var(--border);" />
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">▲ 스마트폰 모바일 화면에서도 한눈에 확인 가능</p>
+</div>
 
 ## 요구사항은 네 줄이었다
 
