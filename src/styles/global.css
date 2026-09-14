@@ -662,7 +662,9 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 
 /* 표 */
 .prose table {
-  width: 100%;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: .9375rem;
