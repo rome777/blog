@@ -905,6 +905,9 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
 @media (max-width: 640px) {
   main { padding-block: 2rem 3.5rem; }
   .site-header__inner { height: 3.5rem; gap: .5rem; }
+  /* 메뉴가 헤더보다 길면 페이지 전체가 아니라 메뉴 안에서만 가로로 밀리게 합니다. */
+  .site-nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .site-nav::-webkit-scrollbar { display: none; }
   .site-nav a { padding: .375rem .4375rem; font-size: .875rem; }
   .site-header__brand { font-size: 1rem; }
   .post-nav { grid-template-columns: 1fr; }
@@ -913,11 +916,8 @@ main { flex: 1 0 auto; padding-block: 3rem 5rem; }
   .site-footer__links { margin-left: 0; width: 100%; }
 }
 
-/* 아주 좁은 화면에서는 메뉴가 넘칠 수 있으니 가로 스크롤을 허용합니다. */
 @media (max-width: 400px) {
   .site-header__brand { font-size: .9375rem; }
-  .site-nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
-  .site-nav::-webkit-scrollbar { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
