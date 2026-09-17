@@ -57,7 +57,7 @@ const activeCategory = trail.at(-1)?.slug;
       <div class="post-header__meta">
         <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
         <span aria-hidden="true">·</span>
-        <span>약 {readingTime(post.body ?? '')}분</span>
+        <span>읽는 데 약 {readingTime(post.body ?? '')}분</span>
         {
           updatedDate && (
             <>
