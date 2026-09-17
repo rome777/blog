@@ -28,7 +28,31 @@ flowchart LR
     P --> R
     V --> R
     C --> R
+
+    classDef src fill:#e5e7eb,stroke:#4b5563,stroke-width:2px,color:#111827
+    classDef key fill:#fef3c7,stroke:#b45309,stroke-width:3px,color:#111827
+    classDef tess fill:#fecaca,stroke:#b91c1c,stroke-width:2px,color:#111827
+    classDef padd fill:#fed7aa,stroke:#c2410c,stroke-width:2px,color:#111827
+    classDef docvlm fill:#bbf7d0,stroke:#15803d,stroke-width:2px,color:#111827
+    classDef gvlm fill:#e9d5ff,stroke:#7e22ce,stroke-width:2px,stroke-dasharray:5 3,color:#111827
+    classDef score fill:#dbeafe,stroke:#1d4ed8,stroke-width:2px,color:#111827
+
+    class PDF src
+    class PNG key
+    class T tess
+    class P padd
+    class V docvlm
+    class C gvlm
+    class R score
+
+    linkStyle 0 stroke:#6b7280,stroke-width:2px
+    linkStyle 1,5 stroke:#ef4444,stroke-width:2px
+    linkStyle 2,6 stroke:#f97316,stroke-width:2px
+    linkStyle 3,7 stroke:#22c55e,stroke-width:2px
+    linkStyle 4,8 stroke:#a855f7,stroke-width:2px,stroke-dasharray:5 3
 ```
+
+<small>점선 = 그림이 외부 서버로 나가는 경로. 색은 아래 다이어그램에서도 같은 도구를 가리킵니다.</small>
 
 | 페이지 | 원문 | 왜 골랐나 |
 | --- | --- | --- |
@@ -196,6 +220,20 @@ flowchart TD
     Q -->|"글자 위치(좌표)"| A["PaddleOCR<br/>단어 단위면 Tesseract"]
     Q -->|"표·수식·읽는 순서"| B["PaddleOCR-VL<br/>+ 좌표는 OCR로 따로 보관"]
     Q -->|"말로 지시하며 시험"| C["Claude·ChatGPT<br/>단, 외부 전송"]
+
+    classDef q fill:#fef3c7,stroke:#b45309,stroke-width:3px,color:#111827
+    classDef padd fill:#fed7aa,stroke:#c2410c,stroke-width:2px,color:#111827
+    classDef docvlm fill:#bbf7d0,stroke:#15803d,stroke-width:2px,color:#111827
+    classDef gvlm fill:#e9d5ff,stroke:#7e22ce,stroke-width:2px,stroke-dasharray:5 3,color:#111827
+
+    class Q q
+    class A padd
+    class B docvlm
+    class C gvlm
+
+    linkStyle 0 stroke:#f97316,stroke-width:2px
+    linkStyle 1 stroke:#22c55e,stroke-width:2px
+    linkStyle 2 stroke:#a855f7,stroke-width:2px,stroke-dasharray:5 3
 ```
 
 **사람이 원문을 꼭 다시 봐야 할 때**
