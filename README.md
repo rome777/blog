@@ -108,4 +108,5 @@ src/
 - 본문까지 훑는 클라이언트 검색
 - giscus 댓글 (설정하면 켜짐)
 - 목차, 이전/다음 글, 읽기 시간
+- 본문의 **외부 링크는 새 탭에서 열림** (`rel="noopener noreferrer"` 자동 부여, 블로그 내부 링크는 현재 탭)
 - RSS, sitemap, Open Graph 태그

@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeExternalLinks from 'rehype-external-links';
 import { rehypeHeadingIds } from '@astrojs/markdown-remark';
 import { SITE_URL, BASE_PATH } from './site.config.mjs';
 
@@ -27,6 +28,17 @@ export default defineConfig({
           test: ['h2', 'h3'],
           properties: { class: 'heading-anchor', ariaHidden: 'true', tabIndex: -1 },
           content: { type: 'text', value: '#' },
+        },
+      ],
+      [
+        // 바깥으로 나가는 링크는 새 탭에서 연다. 글을 읽던 자리를 잃지 않게.
+        // 같은 블로그 안의 상대 경로 링크는 그대로 현재 탭에서 이동한다.
+        rehypeExternalLinks,
+        {
+          target: '_blank',
+          // noopener 없이 새 탭을 열면 열린 쪽에서 window.opener 로 이 페이지를 건드릴 수 있다.
+          rel: ['noopener', 'noreferrer'],
+          protocols: ['http', 'https'],
         },
       ],
     ],
