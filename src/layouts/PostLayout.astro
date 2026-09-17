@@ -113,3 +113,69 @@ const activeCategory = trail.at(-1)?.slug;
 
   <Comments />
 </BaseLayout>
+
+<style is:global>
+  /* 머메이드 다이어그램 — 넓어도 페이지 가로 스크롤을 만들지 않게 가둔다. */
+  .mermaid-figure {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .mermaid-figure svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
+<script is:inline type="module">
+  // ```mermaid 코드블록을 다이어그램으로 바꾼다.
+  // Shiki 가 먼저 하이라이트해 둔 <pre data-language="mermaid"> 에서 원문을 되살린다.
+  const blocks = [...document.querySelectorAll('pre[data-language="mermaid"]')];
+
+  if (blocks.length > 0) {
+    const mermaid = (
+      await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+    ).default;
+
+    // 원문을 먼저 다 걷어 둔다. 렌더가 DOM 을 갈아 끼우기 때문이다.
+    const sources = blocks.map((pre) => pre.textContent ?? '');
+    const figures = blocks.map((pre) => {
+      const figure = document.createElement('figure');
+      figure.className = 'mermaid-figure';
+      pre.replaceWith(figure);
+      return figure;
+    });
+
+    const draw = async () => {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: dark ? 'dark' : 'default',
+        fontFamily: 'inherit',
+        securityLevel: 'strict',
+      });
+      for (const [i, code] of sources.entries()) {
+        try {
+          const { svg } = await mermaid.render(`mermaid-${i}-${Date.now()}`, code);
+          figures[i].innerHTML = svg;
+        } catch (err) {
+          // 문법이 틀렸으면 조용히 비우지 않고 원문을 그대로 보여 준다.
+          figures[i].innerHTML = '';
+          const pre = document.createElement('pre');
+          pre.textContent = code;
+          figures[i].append(pre);
+        }
+      }
+    };
+
+    await draw();
+
+    // 라이트/다크를 바꾸면 다이어그램 색도 따라가야 한다.
+    new MutationObserver(draw).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  }
+</script>
