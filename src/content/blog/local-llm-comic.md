@@ -4,6 +4,7 @@ description: 저사양 노트북에 Ollama로 한국어 소형 LLM을 깔아봤�
 pubDate: 2026-09-14
 category: AI/로컬LLM
 tags: [Ollama, 로컬LLM, sLLM, PowerShell, 만화]
+heroImage: /images/posts/local-llm-comic-banner.png
 ---
 
 <details>

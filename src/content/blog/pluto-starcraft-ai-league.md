@@ -5,6 +5,7 @@ pubDate: 2026-10-21
 category: 프로젝트
 tags: [스타크래프트, BWAPI, 실험설계, Antigravity, AI코딩]
 draft: false
+heroImage: /images/posts/pluto-build-winrate.jpg
 ---
 
 스타크래프트 브루드워를 하는 AI 중에 플루토라는 공개 봇이 있습니다. 10월에 이걸 제 PC에 깔았습니다.
@@ -102,6 +103,8 @@ draft: false
 | 배럭 2개 보병 뒤 확장 | 17승 7패 | 70.8% |
 | 팩토리 1개 뒤 확장 | 16승 8패 | 66.7% |
 | 골리앗 위주 | 14승 10패 | 58.3% |
+
+![빌드별 승률 막대 그림](/blog/images/posts/pluto-build-winrate.jpg)
 
 빌드보다 큰 변수가 따로 있었습니다. 상대가 캐리어를 뽑았느냐입니다.
 리플레이 299판을 세어 보니 캐리어가 나온 판의 승률은 13%, 안 나온 판은 68%였습니다.

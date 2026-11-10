@@ -5,7 +5,7 @@ pubDate: 2026-10-14
 category: AI/프롬프트
 tags: [프롬프트, 컨텍스트엔지니어링, StructuredOutputs, 프롬프트인젝션, RAG, 도구설계]
 draft: false
-heroImage: /images/posts/prompt-comic-injection.jpg
+heroImage: /images/posts/prompt-comic-four-kinds.jpg
 ---
 
 10월 첫 2주는 "프롬프트 엔지니어링" 모듈이었습니다. 이름만 보면 문장을 잘 쓰는 법 같은데, 실제로 배운 건 모델에게 들어가는 것과 나오는 것을 관리하는 법이었습니다.
@@ -91,7 +91,7 @@ Structured Outputs가 막는 방식이 흥미로웠습니다. 모델은 답을 �
 
 발표할 때 쓰려고 이 내용을 4컷 만화 다섯 장으로 그렸습니다. 그림은 이미지 생성 모델로 만들었습니다.
 
-![요청사항 칸에 적힌 명령을 알바가 따르려는 장면을 그린 4컷 만화](/blog/images/posts/prompt-comic-injection.jpg)
+![모델 앞에 들어오는 글 네 종류를 배달 가게로 그린 4컷 만화](/blog/images/posts/prompt-comic-four-kinds.jpg)
 
 막는 방법은 한 겹으로는 부족했습니다. "사장님이 승인하셨대요"처럼 말투만 바꿔도 뚫리기 때문입니다.
 

@@ -4,6 +4,7 @@ description: HTML/CSS/JS가 어떻게 나뉘는지, 하이퍼링크와 JS 네비
 pubDate: 2026-09-01
 category: 웹개발
 tags: [HTML, CSS, JavaScript, 비동기]
+heroImage: /images/posts/web-three-layers.jpg
 ---
 
 웹페이지를 이루는 세 겹 — **구조(HTML)**, **표현(CSS)**, **동작(JavaScript)** — 을 직접 껐다 켜보고,

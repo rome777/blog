@@ -5,6 +5,7 @@ pubDate: 2026-10-02
 category: 프로젝트
 tags: [해커톤, Nextjs, Supabase, 실시간, AI코딩, 협업]
 draft: false
+heroImage: /images/posts/workon-login.jpg
 ---
 
 9월 28일부터 10월 2일까지 과정 안에서 바이브코딩 해커톤이 있었습니다. 과제는 "사내 채팅어플 만들기"였습니다.
