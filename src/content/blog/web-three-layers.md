@@ -2,7 +2,7 @@
 title: 세 겹의 웹 — 구조 · 표현 · 동작을 눌러보며 이해하기
 description: HTML/CSS/JS가 어떻게 나뉘는지, 하이퍼링크와 JS 네비게이션의 차이, 동기/비동기, 코어·스레드까지 — 직접 눌러보는 인터랙티브 정리.
 pubDate: 2026-09-01
-category: 웹개발
+category: 프로젝트
 tags: [HTML, CSS, JavaScript, 비동기]
 heroImage: /images/posts/web-three-layers.jpg
 ---
