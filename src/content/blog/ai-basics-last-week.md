@@ -2,7 +2,7 @@
 title: AI의 이해와 사용 모듈 마지막 주 정리
 description: 음성 받아쓰기, 영상 하나로 3D 장면 만들기, 시계열 기반 모델, 그리고 파인튜닝 모델로 API를 대체할 수 있는지 재 본 Main Quest까지. 9월 셋째 주에 한 과제를 정리했습니다.
 pubDate: 2026-09-23
-category: AI/기초
+category: AI
 tags: [STT, 3D, 가우시안스플랫, 시계열, 파인튜닝, PoC]
 draft: false
 heroImage: /images/posts/sept-room3d.jpg
