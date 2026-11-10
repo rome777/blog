@@ -1,7 +1,7 @@
 ---
 title: LangGraph로 에이전트 네 개를 만든 2주 정리
 description: 뉴스레터, 고객 응대, 딥리서치, 사람 승인. 2주 동안 LangGraph로 에이전트 네 개를 만들면서 잰 숫자와 틀렸던 곳을 정리했습니다.
-pubDate: 2026-11-10
+pubDate: 2026-11-10T09:00:00+09:00
 category: AI/에이전트
 tags: [LangGraph, 에이전트, 멀티에이전트, HITL, 평가, 회고]
 draft: false

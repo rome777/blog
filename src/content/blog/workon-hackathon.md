@@ -1,7 +1,7 @@
 ---
 title: 닷새 동안 둘이서 사내 메신저 WorkOn 만들기
 description: 바이브코딩 해커톤에서 둘이 한 팀으로 사내 메신저를 만들어 배포했습니다. 기능 목록보다, 두 사람의 AI 코딩 도구가 한 저장소에서 부딪히지 않게 한 규칙과 DB에 맡긴 검사를 적었습니다.
-pubDate: 2026-11-10
+pubDate: 2026-10-02
 category: 프로젝트
 tags: [해커톤, Nextjs, Supabase, 실시간, AI코딩, 협업]
 draft: false

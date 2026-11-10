@@ -1,7 +1,7 @@
 ---
 title: LangGraph interrupt와 리듀서 정리
 description: LangGraph에서 interrupt로 멈춘 그래프가 며칠 뒤에도 이어지는 이유, 동시에 돈 워커 여럿의 결과가 한 칸에 모이는 방법을 찾아보고, 그 때문에 설계를 바꾼 곳을 적었습니다.
-pubDate: 2026-11-10
+pubDate: 2026-11-10T10:00:00+09:00
 category: AI/에이전트
 tags: [LangGraph, interrupt, 체크포인터, 리듀서, Send, HITL]
 draft: false

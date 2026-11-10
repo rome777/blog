@@ -1,7 +1,7 @@
 ---
 title: AI Agent 파헤치기 모듈 정리
 description: 에이전트를 감싸는 하네스, 멀티에이전트 실험, MCP, 그리고 사용자와 함께 만드는 카드뉴스 에이전트까지. 열흘 동안 한 실습과 과제를 숫자와 함께 정리했습니다.
-pubDate: 2026-11-10
+pubDate: 2026-10-23
 category: AI/에이전트
 tags: [에이전트, 하네스, 멀티에이전트, MCP, n8n, 카드뉴스]
 draft: false

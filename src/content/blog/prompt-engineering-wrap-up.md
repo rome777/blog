@@ -1,7 +1,7 @@
 ---
 title: 프롬프트 엔지니어링 모듈 정리
 description: 모델에게 무엇을 넣고 무엇을 받는지를 2주 동안 배웠습니다. 이력 정리, 출력 형식, 프롬프트 인젝션, 도구 설계를 제가 만든 과제 세 개와 함께 정리했습니다.
-pubDate: 2026-11-10
+pubDate: 2026-10-14
 category: AI/프롬프트
 tags: [프롬프트, 컨텍스트엔지니어링, StructuredOutputs, 프롬프트인젝션, RAG, 도구설계]
 draft: false
