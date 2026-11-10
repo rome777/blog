@@ -55,7 +55,6 @@ heroImage: /images/posts/local-llm-comic-banner.png
 
 </details>
 
-![내 컴퓨터의 작은 AI들 — 4컷 만화 시리즈](/blog/images/posts/local-llm-comic-banner.png)
 
 ![제1화: 정체성을 잃어버린 네이버 모델](/blog/images/posts/local-llm-comic-1.jpg)
 
