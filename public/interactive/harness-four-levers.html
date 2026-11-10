@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>에이전트 하네스 핵심 4대 레버 (STEP 4~7) 시각화 학습 맵</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    html {
+      /* 해상도별 최적 스케일링: 1080p에서 ~19px, 2K에서 ~26px, 4K UHD에서 ~40px로 시원하게 비례 확대 */
+      font-size: clamp(17px, 1.1vw - 2px, 42px);
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+    .tab-btn.active {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+  </style>
+</head>
+<body class="p-2 sm:p-3 2xl:p-5 min-h-screen">
+  <div class="w-full max-w-[98%] 2xl:max-w-[95%] 3xl:max-w-[3400px] mx-auto space-y-2 sm:space-y-3">
+    
+    <!-- 1. Sleek Compact Header (여백 낭비 없는 슬림 상단 툴바) -->
+    <header class="bg-white rounded-xl px-4 py-2 sm:px-6 sm:py-2.5 border border-slate-200/90 shadow-xs flex flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <span class="px-2.5 py-0.5 rounded-md bg-blue-600 text-white font-extrabold text-xs sm:text-sm tracking-wide">STEP 4~7</span>
+        <h1 class="text-sm sm:text-base lg:text-lg font-black text-slate-900 tracking-tight">
+          에이전트 하네스 핵심 4대 레버 시각화 학습 맵
+        </h1>
+      </div>
+
+      <!-- Tab Buttons -->
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <button onclick="switchTab('step4')" id="tab-step4" class="tab-btn active px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-semibold transition hover:bg-slate-50">
+          4. 컨텍스트
+        </button>
+        <button onclick="switchTab('step5')" id="tab-step5" class="tab-btn px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-semibold transition hover:bg-slate-50">
+          5. 경험 축적
+        </button>
+        <button onclick="switchTab('step6')" id="tab-step6" class="tab-btn px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-semibold transition hover:bg-slate-50">
+          6. 성찰
+        </button>
+        <button onclick="switchTab('step7')" id="tab-step7" class="tab-btn px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs sm:text-sm font-semibold transition hover:bg-slate-50">
+          7. 미니멀
+        </button>
+        <button onclick="switchTab('assignment')" id="tab-assignment" class="tab-btn px-3 py-1.5 rounded-lg border border-purple-200 bg-purple-50 text-purple-700 text-xs sm:text-sm font-bold transition hover:bg-purple-100">
+          🎯 과제 설계
+        </button>
+      </nav>
+    </header>
+
+    <!-- 2. MAIN BODY CONTENT (한 화면 핏 & 큼직하고 시원한 글꼴) -->
+
+    <!-- TAB 1: STEP 4 CONTEXT -->
+    <section id="content-step4" class="tab-content">
+      <div class="bg-white rounded-xl p-3.5 sm:p-5 border border-slate-200 shadow-xs space-y-2.5 sm:space-y-3.5">
+        
+        <!-- Compact Title Row -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-black flex items-center justify-center text-xs sm:text-sm shadow-xs">4</span>
+            <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900">컨텍스트 관리: 남길 정보와 다시 찾을 정보</h2>
+          </div>
+          <span class="text-xs sm:text-sm text-blue-700 font-bold bg-blue-50 px-3 py-0.5 rounded-full border border-blue-100">
+            정보 매몰(Lost in the Middle) 방지 & 토큰 최적화
+          </span>
+        </div>
+
+        <!-- Diagram: Pipeline -->
+        <div class="bg-slate-50/90 p-3 sm:p-4 rounded-xl border border-slate-200/80">
+          <div class="text-xs sm:text-sm font-bold text-slate-600 uppercase tracking-wider mb-1.5">📊 컨텍스트 선별 파이프라인 흐름도</div>
+          <svg viewBox="0 0 920 185" class="w-full h-auto max-h-[9.5rem] 2xl:max-h-[12.5rem] 3xl:max-h-[14rem] mx-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left: Chaotic Data -->
+            <rect x="15" y="10" width="240" height="165" rx="12" fill="#ffffff" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5"/>
+            <text x="135" y="34" font-weight="bold" fill="#e11d48" text-anchor="middle" font-size="14.5">과도한 이력 누적 (잡음)</text>
+            
+            <rect x="30" y="48" width="210" height="28" rx="6" fill="#ffe4e6"/>
+            <text x="135" y="67" fill="#9f1239" text-anchor="middle" font-size="13">수천 줄의 빌드 & 에러 로그</text>
+            
+            <rect x="30" y="84" width="210" height="32" rx="6" fill="#fecdd3" stroke="#e11d48" stroke-width="1.5"/>
+            <text x="135" y="105" fill="#881337" font-weight="bold" text-anchor="middle" font-size="13">⚠️ 핵심 실패 단서 매몰 (망각)</text>
+            
+            <rect x="30" y="124" width="210" height="28" rx="6" fill="#ffe4e6"/>
+            <text x="135" y="143" fill="#9f1239" text-anchor="middle" font-size="13">긴 소스코드 전체 덤프 (토큰 폭증)</text>
+
+            <!-- Arrow 1 -->
+            <path d="M 270 92 L 310 92" stroke="#94a3b8" stroke-width="3" fill="none"/>
+            <polygon points="310,92 300,86 300,98" fill="#94a3b8"/>
+
+            <!-- Center: Intelligent Filter -->
+            <rect x="325" y="10" width="270" height="165" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+            <text x="460" y="34" font-weight="bold" fill="#1d4ed8" text-anchor="middle" font-size="14.5">지능형 선별 필터</text>
+            
+            <rect x="340" y="46" width="240" height="36" rx="6" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.2"/>
+            <text x="460" y="62" fill="#1e40af" font-weight="bold" text-anchor="middle" font-size="13">코드 목차·색인 지도 (Repo Map)</text>
+            <text x="460" y="76" fill="#3b82f6" font-size="12" text-anchor="middle">함수·클래스 선언부만 1쪽 요약</text>
+            
+            <rect x="340" y="88" width="240" height="30" rx="6" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.2"/>
+            <text x="460" y="108" fill="#1e40af" text-anchor="middle" font-size="13">과거 관찰 &rarr; 1줄 요약 압축</text>
+            
+            <rect x="340" y="124" width="240" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+            <text x="460" y="144" fill="#1e3a8a" font-weight="bold" text-anchor="middle" font-size="13">최근 관찰 5개 원문 집중 보존</text>
+
+            <!-- Arrow 2 -->
+            <path d="M 610 92 L 650 92" stroke="#3b82f6" stroke-width="3" fill="none"/>
+            <polygon points="650,92 640,86 640,98" fill="#3b82f6"/>
+
+            <!-- Right: Agent Success -->
+            <rect x="665" y="10" width="240" height="165" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+            <text x="785" y="34" font-weight="bold" fill="#047857" text-anchor="middle" font-size="14.5">최적화된 에이전트 실행</text>
+            
+            <circle cx="785" cy="88" r="28" fill="#10b981"/>
+            <text x="785" y="94" fill="#ffffff" font-weight="black" font-size="15.5" text-anchor="middle">18.0%</text>
+            
+            <text x="785" y="136" fill="#065f46" font-weight="bold" text-anchor="middle" font-size="13.5">해결률 +3.0%p 향상 실증!</text>
+            <text x="785" y="153" fill="#047857" font-size="12" text-anchor="middle">(SWE-agent NeurIPS 2024)</text>
+          </svg>
+        </div>
+
+        <!-- 2 Comparison Cards (시원한 본문 글꼴) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div class="p-3 sm:p-4 rounded-xl bg-rose-50/80 border border-rose-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-rose-800 text-sm sm:text-base">과도한 누적 (Unmanaged)</span>
+              <span class="px-2.5 py-0.5 bg-rose-200 text-rose-900 text-xs sm:text-sm font-bold rounded font-mono">해결률 15.0%</span>
+            </div>
+            <p class="text-xs sm:text-sm text-rose-950 leading-relaxed font-medium">
+              빌드 실패 로그, 긴 에러 메시지 전체를 대화에 그대로 쌓아두는 방식. 토큰 비용만 급증하고 모델이 중간 단서를 놓칩니다.
+            </p>
+          </div>
+
+          <div class="p-3 sm:p-4 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-emerald-900 text-sm sm:text-base">최근 5개 관찰 유지 (SWE-agent 공식)</span>
+              <span class="px-2.5 py-0.5 bg-emerald-200 text-emerald-950 text-xs sm:text-sm font-bold rounded font-mono">해결률 18.0% (+3.0%p)</span>
+            </div>
+            <p class="text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
+              최근 5개의 관찰만 상세히 남기고 이전 관찰은 축약하여 집중도를 극대화. 해결률이 <strong>3.0%p 상승</strong>했습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Research Evidence Table (넉넉하고 또렷한 글꼴) -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-2xs">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100/90 border-b border-slate-200 text-slate-800 text-xs sm:text-sm">
+                <th class="py-2.5 px-4 font-bold w-[25%] border-r border-slate-200/80">연구·벤더 기법</th>
+                <th class="py-2.5 px-4 font-bold w-[55%] border-r border-slate-200/80">핵심 원리 및 시각화 요약</th>
+                <th class="py-2.5 px-4 font-bold w-[20%]">출처 / 벤치마크</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-2.5 px-4 font-bold text-blue-700 align-top border-r border-slate-100">
+                  최근 5개 관찰 유지 (SWE-agent)
+                </td>
+                <td class="py-2.5 px-4 text-slate-800 leading-relaxed align-top border-r border-slate-100">
+                  직전 5개의 도구 호출·실행 결과는 원문을 보존하고, 그 이전의 긴 로그는 1줄로 압축하여 중요한 단서가 묻히는 현상(Lost in the Middle)을 완벽 방지
+                </td>
+                <td class="py-2.5 px-4 align-top">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                    NeurIPS 2024 (+3.0%p)
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                <td class="py-2.5 px-4 font-bold text-purple-700 align-top border-r border-slate-100">
+                  코드 목차·색인 지도 (Aider Repo Map)
+                </td>
+                <td class="py-2.5 px-4 text-slate-800 leading-relaxed align-top border-r border-slate-100">
+                  수천 줄의 코드 본문 전체를 대화에 덤프하지 않고, 함수·클래스 선언부만 추출한 '상세 목차 지도(1000토큰 내외)'만 제공하여 에이전트가 필요한 파일만 정확히 열도록 유도
+                </td>
+                <td class="py-2.5 px-4 align-top">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-purple-50 text-purple-800 border border-purple-200">
+                    Aider 공식 설계 문서
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-2.5 px-4 font-bold text-amber-700 align-top border-r border-slate-100">
+                  RAG vs Long-context
+                </td>
+                <td class="py-2.5 px-4 text-slate-800 leading-relaxed align-top border-r border-slate-100">
+                  토큰 예산이 충분하다면 긴 원문을 통째로 전달하는 것이 분할 검색보다 성능 우수. RAG의 본질적 가치는 성능 향상이 아닌 <strong>'비용 및 지연시간 절감'</strong>
+                </td>
+                <td class="py-2.5 px-4 align-top">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                    EMNLP 2024 학술 논문
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: STEP 5 ACCUMULATION -->
+    <section id="content-step5" class="tab-content hidden">
+      <div class="bg-white rounded-xl p-3.5 sm:p-5 border border-slate-200 shadow-xs space-y-2.5 sm:space-y-3.5">
+        
+        <!-- Compact Title Row -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-black flex items-center justify-center text-xs sm:text-sm shadow-xs">5</span>
+            <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900">경험·스킬 축적: 지난 실행을 다음 실행에 쓰기</h2>
+          </div>
+          <span class="text-xs sm:text-sm text-purple-700 font-bold bg-purple-50 px-3 py-0.5 rounded-full border border-purple-100">
+            컴파운드 엔지니어링 & 3계층 피라미드
+          </span>
+        </div>
+
+        <!-- 3-Tier Architecture -->
+        <div class="bg-purple-50/30 p-3 sm:p-4 rounded-xl border border-purple-200 space-y-2.5">
+          <div class="flex items-center justify-between pb-1 text-xs sm:text-sm">
+            <span class="font-bold text-purple-950">🏛️ Google Research WikiSkill (2026) 3계층 사다리꼴 피라미드</span>
+            <span class="px-3 py-1 bg-purple-200 text-purple-950 font-bold text-xs sm:text-sm rounded-lg font-mono">
+              Qwen-27B 정확도: 39.4% &rarr; 63.3% 폭등 (+23.9%p)
+            </span>
+          </div>
+
+          <!-- SVG Stepped Trapezoid Pyramid -->
+          <div class="w-full max-w-5xl 2xl:max-w-6xl 3xl:max-w-7xl mx-auto">
+            <svg viewBox="0 0 1000 295" class="w-full h-auto max-h-[11rem] 2xl:max-h-[14rem] 3xl:max-h-[16rem] mx-auto" xmlns="http://www.w3.org/2000/svg">
+              <!-- Tier 3: 3층 실행 스킬 -->
+              <polygon points="150,10 850,10 895,85 105,85" fill="#581c87" stroke="#7c3aed" stroke-width="2.5" />
+              <rect x="175" y="22" width="60" height="24" rx="5" fill="#9333ea"/>
+              <text x="205" y="38" fill="#ffffff" font-weight="black" font-size="12.5" text-anchor="middle">3층</text>
+              <rect x="730" y="22" width="95" height="24" rx="5" fill="#3b0764" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="777" y="38" fill="#f5d0fe" font-weight="bold" font-size="12.5" font-family="ui-monospace, monospace" text-anchor="middle">SKILL.md</text>
+              <text x="500" y="42" fill="#ffffff" font-weight="black" font-size="18" text-anchor="middle">실행 스킬 (Deployable Skills)</text>
+              <text x="500" y="67" fill="#e9d5ff" font-weight="medium" font-size="13.5" text-anchor="middle">에이전트가 새 세션에서 직접 호출해 복붙 없이 즉시 실행 가능한 검증된 절차·스크립트</text>
+
+              <!-- Tier 2: 2층 지식 위키 -->
+              <polygon points="95,95 905,95 950,175 50,175" fill="#6b21a8" stroke="#9333ea" stroke-width="2.5" />
+              <rect x="120" y="108" width="60" height="24" rx="5" fill="#a855f7"/>
+              <text x="150" y="124" fill="#ffffff" font-weight="black" font-size="12.5" text-anchor="middle">2층</text>
+              <rect x="765" y="108" width="105" height="24" rx="5" fill="#4a044e" stroke="#c084fc" stroke-width="1.5"/>
+              <text x="817" y="124" fill="#f5d0fe" font-weight="bold" font-size="12.5" text-anchor="middle">지식 백과사전</text>
+              <text x="500" y="128" fill="#ffffff" font-weight="black" font-size="18" text-anchor="middle">지식 위키 (Knowledge Wiki)</text>
+              <text x="500" y="154" fill="#f3e8ff" font-weight="medium" font-size="13.5" text-anchor="middle">여러 번의 실행에서 얻은 교훈, 버그 원인과 문제 해결 패턴을 정제하여 체계적으로 누적</text>
+
+              <!-- Tier 1: 1층 원문 궤적 -->
+              <polygon points="45,185 955,185 995,270 5,270" fill="#334155" stroke="#64748b" stroke-width="2.5" />
+              <rect x="70" y="198" width="60" height="24" rx="5" fill="#64748b"/>
+              <text x="100" y="214" fill="#ffffff" font-weight="black" font-size="12.5" text-anchor="middle">1층</text>
+              <rect x="830" y="198" width="95" height="24" rx="5" fill="#0f172a" stroke="#94a3b8" stroke-width="1.5"/>
+              <text x="877" y="214" fill="#cbd5e1" font-weight="bold" font-size="12.5" text-anchor="middle">로그 원본</text>
+              <text x="500" y="218" fill="#ffffff" font-weight="black" font-size="18" text-anchor="middle">원문 궤적 (Raw Traces)</text>
+              <text x="500" y="246" fill="#e2e8f0" font-weight="medium" font-size="13.5" text-anchor="middle">당시 실행한 도구 호출, 터미널 로그 원문. 지식의 사실 관계 검증용으로만 보관</text>
+
+              <!-- Side Badges -->
+              <path d="M 32 220 L 32 145" stroke="#a855f7" stroke-width="2" stroke-dasharray="4 3"/>
+              <polygon points="32,135 27,148 37,148" fill="#a855f7"/>
+              <rect x="4" y="105" width="58" height="22" rx="4" fill="#f3e8ff" stroke="#c084fc" stroke-width="1.2"/>
+              <text x="33" y="120" fill="#7e22ce" font-weight="bold" font-size="12" text-anchor="middle">정제 ↑</text>
+
+              <path d="M 968 140 L 968 55" stroke="#c084fc" stroke-width="2" stroke-dasharray="4 3"/>
+              <polygon points="968,45 963,58 973,58" fill="#c084fc"/>
+              <rect x="938" y="14" width="58" height="22" rx="4" fill="#f3e8ff" stroke="#c084fc" stroke-width="1.2"/>
+              <text x="967" y="29" fill="#7e22ce" font-weight="bold" font-size="12" text-anchor="middle">승격 ↑</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4 Storage Forms Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs sm:text-sm">
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-blue-700 block text-sm sm:text-base">1. 원문 궤적</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">검토에 가장 완벽하나 너무 길어 프롬프트 주입 불가.</p>
+          </div>
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-emerald-700 block text-sm sm:text-base">2. 요약 (Summary)</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">빠르고 가볍지만, 중요한 예외 조건 누락 위험 존재.</p>
+          </div>
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-amber-700 block text-sm sm:text-base">3. 인사이트 (ExpeL)</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">검색 연동 우수하나(WebShop 0.701), 착각 오염 위험.</p>
+          </div>
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-purple-700 block text-sm sm:text-base">4. 코드 스킬 (Voyager)</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">재사용성 극대화. 구형 API 맹목 반복 주의.</p>
+          </div>
+        </div>
+
+        <!-- Memory Poisoning Warning Box -->
+        <div class="p-2.5 px-4 rounded-xl bg-amber-50 border border-amber-300 flex items-center gap-3 text-xs sm:text-sm text-amber-950">
+          <span class="text-lg">⚠️</span>
+          <div class="leading-relaxed">
+            <strong>메모리 오염(Memory Poisoning) 방지</strong>: 에이전트 자율 요약 금지 &rarr; <strong>명확한 테스트 실패/정정 증거가 있을 때만 수정</strong>하고, 틀린 항목은 삭제 대신 <strong>취소선(폐기 표시)</strong>을 그어 실수를 방지합니다.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 3: STEP 6 REFLECTION -->
+    <section id="content-step6" class="tab-content hidden">
+      <div class="bg-white rounded-xl p-3.5 sm:p-5 border border-slate-200 shadow-xs space-y-2.5 sm:space-y-3.5">
+        
+        <!-- Compact Title Row -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-amber-500 text-white font-black flex items-center justify-center text-xs sm:text-sm shadow-xs">6</span>
+            <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900">성찰: 실패 기록에서 다음 행동 고치기</h2>
+          </div>
+          <span class="text-xs sm:text-sm text-amber-800 font-bold bg-amber-50 px-3 py-0.5 rounded-full border border-amber-200">
+            막연한 반성문 ❌ &rarr; 구체적 다음 행동 1줄 ⭕
+          </span>
+        </div>
+
+        <!-- Reflexion Diagram -->
+        <div class="bg-slate-50/90 p-3 sm:p-4 rounded-xl border border-slate-200/80">
+          <div class="text-xs sm:text-sm font-bold text-slate-600 uppercase tracking-wider mb-1.5">🔄 Reflexion 언어 피드백 루프</div>
+          <svg viewBox="0 0 920 205" class="w-full h-auto max-h-[10.5rem] 2xl:max-h-[13.5rem] 3xl:max-h-[15rem] mx-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Node 1: Trial -->
+            <rect x="20" y="20" width="175" height="65" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8"/>
+            <text x="107" y="47" font-weight="bold" fill="#1e40af" text-anchor="middle" font-size="14.5">1. 코드 실행 (Trial)</text>
+            <text x="107" y="68" fill="#3b82f6" font-size="13" text-anchor="middle">도구 호출 및 테스트</text>
+
+            <!-- Arrow 1-2 -->
+            <path d="M 195 52 L 245 52" stroke="#94a3b8" stroke-width="2.5"/>
+            <polygon points="245,52 235,47 235,57" fill="#94a3b8"/>
+
+            <!-- Node 2: Error -->
+            <rect x="250" y="20" width="185" height="65" rx="8" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.8"/>
+            <text x="342" y="47" font-weight="bold" fill="#9f1239" text-anchor="middle" font-size="14.5">2. 실패 감지 (Error)</text>
+            <text x="342" y="68" fill="#f43f5e" font-size="13" text-anchor="middle">AssertionError 확인</text>
+
+            <!-- Arrow 2-3 -->
+            <path d="M 435 52 L 485 52" stroke="#94a3b8" stroke-width="2.5"/>
+            <polygon points="485,52 475,47 475,57" fill="#94a3b8"/>
+
+            <!-- Node 3: Reflection -->
+            <rect x="490" y="12" width="220" height="80" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.8"/>
+            <text x="600" y="38" font-weight="bold" fill="#92400e" text-anchor="middle" font-size="15">3. 성찰 (Reflection)</text>
+            <text x="600" y="58" fill="#b45309" font-weight="bold" font-size="13.5">"다음에 할 것 1줄"</text>
+            <text x="600" y="76" fill="#78350f" font-size="12.5" text-anchor="middle">상태: [미검증]</text>
+
+            <!-- Arrow 3-4 -->
+            <path d="M 710 52 L 755 52" stroke="#94a3b8" stroke-width="2.5"/>
+            <polygon points="755,52 745,47 745,57" fill="#94a3b8"/>
+
+            <!-- Node 4: Success -->
+            <rect x="760" y="20" width="145" height="65" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/>
+            <text x="832" y="47" font-weight="bold" fill="#065f46" text-anchor="middle" font-size="14.5">4. 재시도 성공!</text>
+            <text x="832" y="68" fill="#059669" font-size="13" font-weight="bold" text-anchor="middle">HotpotQA +8%p</text>
+
+            <!-- Feedback Loop Line: Separated Branches -->
+            <path d="M 832 85 C 832 155, 770 155, 725 155" fill="none" stroke="#10b981" stroke-width="2.2" stroke-dasharray="6 4"/>
+
+            <!-- Center Clean Badge -->
+            <rect x="215" y="136" width="510" height="36" rx="18" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/>
+            <text x="470" y="159" fill="#047857" font-weight="bold" font-size="14" text-anchor="middle">✨ 2~3회 연속 통과 시 공식 스킬(SKILL.md)로 자동 승격</text>
+
+            <!-- Left Branch -->
+            <path d="M 215 155 C 160 155, 107 145, 107 96" fill="none" stroke="#10b981" stroke-width="2.2" stroke-dasharray="6 4"/>
+            <polygon points="107,85 102,98 112,98" fill="#10b981"/>
+          </svg>
+        </div>
+
+        <!-- Bad vs Good Comparison Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div class="p-3 sm:p-4 rounded-xl bg-rose-50/80 border border-rose-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-rose-800 text-sm sm:text-base">나쁜 성찰 (추상적 결론)</span>
+              <span class="px-2.5 py-0.5 bg-rose-200 text-rose-800 font-bold text-xs sm:text-sm rounded">MBPP 점수 하락</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-rose-100 text-xs sm:text-sm font-mono text-slate-600 space-y-1">
+              <div>"테스트 케이스를 꼼꼼하게 검토하지 못했다."</div>
+              <div>"검색이 부족했다. 다음엔 더 많이 찾아보자."</div>
+            </div>
+            <p class="text-xs sm:text-sm text-rose-900 leading-relaxed font-medium">
+              &rarr; 다음 턴에서 모델이 어떤 코드를 쳐야 할지 전혀 알려주지 못함.
+            </p>
+          </div>
+
+          <div class="p-3 sm:p-4 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-emerald-900 text-sm sm:text-base">좋은 성찰 (검증할 행동 지침)</span>
+              <span class="px-2.5 py-0.5 bg-emerald-200 text-emerald-900 font-bold text-xs sm:text-sm rounded">HotpotQA +8%p</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-lg border border-emerald-200 text-xs sm:text-sm font-mono text-slate-800 space-y-1">
+              <div class="text-rose-600 font-bold">[실패] 할인 함수가 할인액(2,000)을 반환함</div>
+              <div class="text-emerald-700 font-bold">[다음 행동] return price * (100 - p) / 100 으로 수정</div>
+            </div>
+            <p class="text-xs sm:text-sm text-emerald-900 leading-relaxed font-medium">
+              &rarr; 에이전트가 다음 번에 어떤 파라미터를 고쳐야 하는지 1초 만에 판단.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 Golden Rules -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs sm:text-sm">
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-amber-700 block text-sm sm:text-base">최대 3개 제한</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">과거 반성은 최근 1~3개만 주입해야 토큰 절약 및 집중 유지.</p>
+          </div>
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-emerald-700 block text-sm sm:text-base">성공 시 스킬 승격</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">'다음 행동'으로 2~3회 연속 통과되면 공식 스킬(SKILL.md)로 이관.</p>
+          </div>
+          <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span class="font-bold text-purple-700 block text-sm sm:text-base">하지 말 것 대신 '할 것'</span>
+            <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">"~하지 마라"는 금지어 대신 "~하라"는 구체적 실행 지침 작성.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: STEP 7 MINIMAL -->
+    <section id="content-step7" class="tab-content hidden">
+      <div class="bg-white rounded-xl p-3.5 sm:p-5 border border-slate-200 shadow-xs space-y-2.5 sm:space-y-3.5">
+        
+        <!-- Compact Title Row -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-cyan-600 text-white font-black flex items-center justify-center text-xs sm:text-sm shadow-xs">7</span>
+            <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900">미니멀: 도구와 프롬프트를 줄인 하네스</h2>
+          </div>
+          <span class="text-xs sm:text-sm text-cyan-800 font-bold bg-cyan-50 px-3 py-0.5 rounded-full border border-cyan-200">
+            가장 작은 루프(Smallest Viable Loop) 탐색
+          </span>
+        </div>
+
+        <!-- Balance Scale Graphic -->
+        <div class="bg-slate-50/90 p-3 sm:p-4 rounded-xl border border-slate-200/80">
+          <div class="text-xs sm:text-sm font-bold text-slate-600 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <span>⚖️ 하네스 무게와 성능의 천칭 저울 비교</span>
+            <span class="text-xs sm:text-sm bg-slate-200 text-slate-800 px-3 py-0.5 rounded font-bold">미니멀이 더 빠르고 정확함</span>
+          </div>
+          <svg viewBox="0 0 940 240" class="w-full h-auto max-h-[11rem] 2xl:max-h-[14rem] 3xl:max-h-[16rem] mx-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Center Pedestal Base -->
+            <rect x="400" y="214" width="140" height="16" fill="#1e293b" rx="4"/>
+            <rect x="425" y="202" width="90" height="13" fill="#334155" rx="3"/>
+
+            <!-- Center Column Pillar -->
+            <rect x="461" y="60" width="18" height="144" fill="#64748b" rx="3"/>
+            <line x1="470" y1="65" x2="470" y2="202" stroke="#94a3b8" stroke-width="2"/>
+
+            <!-- Fulcrum Pivot & Needle -->
+            <path d="M 440 35 Q 470 27 500 35" fill="none" stroke="#94a3b8" stroke-width="2"/>
+            <line x1="470" y1="27" x2="470" y2="35" stroke="#e11d48" stroke-width="2"/>
+            <line x1="470" y1="60" x2="455" y2="31" stroke="#e11d48" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="470" cy="60" r="13" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+            <circle cx="470" cy="60" r="4.5" fill="#f8fafc"/>
+
+            <!-- Tilted Crossbeam -->
+            <line x1="170" y1="102" x2="770" y2="18" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="170" cy="102" r="6" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+            <circle cx="770" cy="18" r="6" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+
+            <!-- LEFT SCALE: Heavy Bloated -->
+            <line x1="170" y1="108" x2="105" y2="166" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="3 2"/>
+            <line x1="170" y1="108" x2="235" y2="166" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="3 2"/>
+            <line x1="170" y1="108" x2="170" y2="168" stroke="#cbd5e1" stroke-width="1.5"/>
+            <ellipse cx="170" cy="168" rx="68" ry="13" fill="#ffe4e6" stroke="#e11d48" stroke-width="2.2"/>
+            <rect x="105" y="125" width="130" height="38" rx="6" fill="#e11d48" stroke="#be123c" stroke-width="1.5"/>
+            <text x="170" y="149" fill="#ffffff" font-weight="black" font-size="13" text-anchor="middle">무거운 배낭 (8000토큰)</text>
+            <text x="170" y="196" fill="#9f1239" font-weight="bold" font-size="14" text-anchor="middle">도구 20개 + MCP 5개</text>
+            <text x="170" y="214" fill="#881337" font-size="12.5" text-anchor="middle">도구 선택 혼란 및 응답 지연</text>
+
+            <!-- RIGHT SCALE: Lean Minimal -->
+            <line x1="770" y1="24" x2="705" y2="82" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="3 2"/>
+            <line x1="770" y1="24" x2="835" y2="82" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="3 2"/>
+            <line x1="770" y1="24" x2="770" y2="84" stroke="#cbd5e1" stroke-width="1.5"/>
+            <ellipse cx="770" cy="84" rx="68" ry="13" fill="#ecfdf5" stroke="#10b981" stroke-width="2.2"/>
+            <rect x="710" y="44" width="120" height="36" rx="6" fill="#10b981" stroke="#059669" stroke-width="1.5"/>
+            <text x="770" y="67" fill="#ffffff" font-weight="black" font-size="13" text-anchor="middle">초경량 (1000토큰)</text>
+            <text x="770" y="112" fill="#065f46" font-weight="bold" font-size="14" text-anchor="middle">도구 4개만! (pi / mini-swe)</text>
+            <text x="770" y="130" fill="#047857" font-size="13" font-weight="bold" text-anchor="middle">SWE-bench Verified 74%+</text>
+          </svg>
+        </div>
+
+        <!-- 2 Comparison Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+          <div class="p-3 sm:p-4 rounded-xl bg-slate-100 border border-slate-300 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 text-sm sm:text-base">무거운 하네스 (Heavy)</span>
+              <span class="px-2.5 py-0.5 bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm rounded">과거 방식</span>
+            </div>
+            <div class="space-y-1.5 text-slate-700">
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-slate-200">
+                <span>시스템 프롬프트</span><span class="font-mono font-bold text-rose-600">8000+ 토큰 (과잉)</span>
+              </div>
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-slate-200">
+                <span>제공 도구 수</span><span class="font-mono font-bold text-rose-600">MCP 5개 + 도구 20개</span>
+              </div>
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-slate-200">
+                <span>위험 요소</span><span class="font-mono font-bold text-rose-600">도구 오호출, 충돌</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 sm:p-4 rounded-xl bg-cyan-50/70 border border-cyan-300 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-cyan-950 text-sm sm:text-base">미니멀 하네스 (Lean)</span>
+              <span class="px-2.5 py-0.5 bg-cyan-200 text-cyan-950 font-bold text-xs sm:text-sm rounded">최신 트렌드</span>
+            </div>
+            <div class="space-y-1.5 text-slate-800">
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-cyan-200">
+                <span>시스템 프롬프트</span><span class="font-mono font-bold text-emerald-700">&lt; 1000 토큰 (-80%)</span>
+              </div>
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-cyan-200">
+                <span>제공 도구 수</span><span class="font-mono font-bold text-emerald-700">read, write, edit, bash 4개만!</span>
+              </div>
+              <div class="p-2 px-3 bg-white rounded-lg flex justify-between items-center border border-cyan-200">
+                <span>효과</span><span class="font-mono font-bold text-emerald-700">빠른 응답 속도, 추론 집중</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-xs sm:text-sm text-blue-950 leading-relaxed font-medium">
+          🏢 <strong>Anthropic 공식 사례</strong>: Claude Code 프롬프트에서 <strong>80% 이상을 덜어냈으나 성능 손실이 전혀 없었습니다</strong>.
+          최신 모델에서는 과거의 장황한 제약들이 오히려 모델의 발목을 잡고 있었음을 실증했습니다.
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 5: STEP 11 ASSIGNMENT -->
+    <section id="content-assignment" class="tab-content hidden">
+      <div class="bg-white rounded-xl p-3.5 sm:p-5 border-2 border-purple-300 shadow-xs space-y-2.5 sm:space-y-3.5">
+        
+        <!-- Compact Title Row -->
+        <div class="flex items-center justify-between pb-2 border-b border-purple-100">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-black flex items-center justify-center text-xs sm:text-sm shadow-xs">🎯</span>
+            <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900">하네스 실험 과제(STEP 11) 설계도</h2>
+          </div>
+          <span class="text-xs sm:text-sm text-purple-700 font-bold bg-purple-50 px-3 py-0.5 rounded-full border border-purple-100">
+            가장 추천하는 STEP 5 기반 설계 완성본
+          </span>
+        </div>
+
+        <!-- High-End Professional Table -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-2xs">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100/90 border-b border-slate-200 text-slate-800 text-xs sm:text-sm">
+                <th class="py-2.5 px-4 font-bold w-[22%] text-slate-900 border-r border-slate-200/80">과제 평가 필수 항목</th>
+                <th class="py-2.5 px-4 font-bold w-[54%] text-slate-900 border-r border-slate-200/80">보고서 작성 내용 (STEP 5 기반 추천안)</th>
+                <th class="py-2.5 px-4 font-bold w-[24%] text-slate-900">채점 기준 체크</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-2 px-4 font-bold text-blue-700 align-middle border-r border-slate-100">
+                  1. 도구의 불편 정의
+                </td>
+                <td class="py-2 px-4 text-slate-800 leading-relaxed align-middle border-r border-slate-100">
+                  이전에 비슷한 버그를 고쳤음에도, 새 세션에서 똑같은 실수를 반복하며 파일 탐색에 3회 이상 헤맴
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+                    구체적 작업과 행동 명시 [충족]
+                  </span>
+                </td>
+              </tr>
+
+              <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                <td class="py-2 px-4 font-bold text-emerald-700 align-middle border-r border-slate-100">
+                  2. 반증 가능한 가설
+                </td>
+                <td class="py-2 px-4 text-slate-900 font-semibold leading-relaxed align-middle border-r border-slate-100">
+                  "첫 시도 해결법을 <code class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 font-mono text-xs text-emerald-800">notes/</code>에 남기고 다음 요청에 참조시키면, 두 번째 시도의 소요 시간과 수정 횟수가 30% 이상 감소한다."
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                    반대 결과 시 기각 가능 [충족]
+                  </span>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-2 px-4 font-bold text-slate-700 align-middle border-r border-slate-100">
+                  3. 고정 변인 (통제)
+                </td>
+                <td class="py-2 px-4 text-slate-800 leading-relaxed align-middle border-r border-slate-100">
+                  동일 모델, 동일한 3개 작업 fixture (<code class="px-1.5 py-0.5 bg-slate-100 rounded text-xs font-mono">parse-log</code>, <code class="px-1.5 py-0.5 bg-slate-100 rounded text-xs font-mono">refactor-util</code>, <code class="px-1.5 py-0.5 bg-slate-100 rounded text-xs font-mono">fix-failing</code>)
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                    작업 난이도 변수 원천 차단
+                  </span>
+                </td>
+              </tr>
+
+              <tr class="bg-purple-50/20 hover:bg-purple-50/40 transition-colors">
+                <td class="py-2 px-4 font-bold text-purple-700 align-middle border-r border-slate-100">
+                  4. 조작 변인 (단 하나)
+                </td>
+                <td class="py-2 px-4 text-purple-950 font-semibold leading-relaxed align-middle border-r border-slate-100">
+                  경험 기록 조건(폴더 A: <code class="px-1.5 py-0.5 bg-purple-100 rounded text-xs font-mono text-purple-800">notes/</code> 참조) vs 대조 조건(폴더 B: 기록 없이 백지 시작)
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-purple-100 text-purple-900 border border-purple-300">
+                    단일 변인 조작 [충족]
+                  </span>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-2 px-4 font-bold text-amber-700 align-middle border-r border-slate-100">
+                  5. 이중 측정 (종속 변인)
+                </td>
+                <td class="py-2 px-4 text-slate-800 leading-relaxed align-middle border-r border-slate-100">
+                  테스트 통과율(성공 여부) + 소요 시간(Wall-clock), 도구 호출 횟수, 토큰량
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-medium bg-amber-50 text-amber-900 border border-amber-200">
+                    해결률 + 보조 지표 동시 측정
+                  </span>
+                </td>
+              </tr>
+
+              <tr class="bg-slate-50/30 hover:bg-slate-50 transition-colors">
+                <td class="py-2 px-4 font-bold text-rose-700 align-middle border-r border-slate-100">
+                  6. 사전 판정식
+                </td>
+                <td class="py-2 px-4 text-slate-900 font-semibold leading-relaxed align-middle border-r border-slate-100">
+                  "3개 작업 중 2개 이상에서 시간과 시도 수가 모두 적으면 가설 지지(Accept), 그렇지 않으면 기각"
+                </td>
+                <td class="py-2 px-4 align-middle">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200">
+                    결과 확인 전 판정 기준 고정
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Folder Structure -->
+        <div class="p-2.5 px-4 rounded-xl bg-purple-50/70 border border-purple-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-purple-950">
+          <div class="font-bold flex items-center gap-1.5 whitespace-nowrap">
+            <span>📁</span> 제출 저장소 필수 파일 구조:
+          </div>
+          <pre class="bg-white p-2 px-3 rounded-lg border border-purple-150 font-mono text-xs sm:text-sm text-slate-800 leading-snug overflow-x-auto w-full sm:w-auto">my-harness-experiment/ ├── README.md   ├── experiment-01.md   ├── traces/   └── fixture/</pre>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      const activeContent = document.getElementById('content-' + tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('tab-' + tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
