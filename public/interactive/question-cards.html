@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>질문 연습 카드</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  /*
+    글 하나를 읽어 와 질문 카드로 바꿔 보여 주는 페이지.
+    주소 끝에 ?post=<글 주소 이름> 을 붙여 연다. 카드 내용은 글에서 그때그때 읽어 오므로
+    글을 고치면 카드도 같이 바뀐다. 따로 다시 만들 것이 없다.
+
+    글에서 읽는 규칙
+      ## 제목            묶음 이름
+      ### Q3. 질문        카드 한 장
+      > 인용 칸           먼저 할 답
+      꼬리 질문 표         첫 칸 머리가 "꼬리 질문"인 표
+      그 밖의 문단·표·코드  이유 설명
+  */
+  :root {
+    --bg: #ffffff; --surface: #f6f7f9; --text: #16191d; --muted: #5c6773; --border: #e4e8ed;
+    --accent: #2563eb; --accent-soft: #eff4ff; --on-accent: #ffffff;
+    --good: #166534; --good-soft: #dcfce7; --again: #92400e; --again-soft: #fef3c7;
+  }
+  :root[data-theme='dark'] {
+    --bg: #0f1115; --surface: #161920; --text: #e4e8ee; --muted: #98a2b0; --border: #2a303a;
+    --accent: #7aa2ff; --accent-soft: #1b2540; --on-accent: #0f1115;
+    --good: #86efac; --good-soft: #12301f; --again: #fcd34d; --again-soft: #3a2a0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+                 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: break-word;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px 24px; }
+  @media (max-width: 480px) { .wrap { padding: 16px 12px 20px; } }
+  /* 키보드가 없는 기기에서는 단축키 표시를 뺀다 */
+  @media (hover: none), (pointer: coarse) { kbd { display: none; } }
+
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .top h1 { margin: 0; font-size: 1.0625rem; font-weight: 700; letter-spacing: -.01em; }
+  .count { color: var(--muted); font-size: .9375rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .progress { height: 4px; margin: 10px 0 14px; background: var(--surface); border-radius: 2px; overflow: hidden; }
+  .progress > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s ease; }
+
+  .options { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 14px; color: var(--muted); font-size: .9375rem; }
+  .options label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+  .options input { width: 16px; height: 16px; accent-color: var(--accent); }
+  .options .spacer { flex: 1; }
+
+  button {
+    font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); padding: 9px 16px; line-height: 1.4;
+  }
+  button:hover { border-color: var(--accent); }
+  button:focus-visible, .options input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.small { padding: 5px 12px; font-size: .9375rem; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+  button.good { background: var(--good-soft); border-color: var(--good-soft); color: var(--good); font-weight: 600; }
+  button.again { background: var(--again-soft); border-color: var(--again-soft); color: var(--again); font-weight: 600; }
+  kbd {
+    font: inherit; font-size: .8125rem; padding: 0 6px; margin-left: 6px; border-radius: 4px;
+    border: 1px solid currentColor; opacity: .65;
+  }
+
+  .card { border: 1px solid var(--border); border-radius: 10px; padding: 20px; background: var(--bg); }
+  @media (max-width: 480px) { .card { padding: 16px 14px; } }
+  .group { color: var(--muted); font-size: .875rem; margin-bottom: 4px; }
+  .question { margin: 0; font-size: 1.3125rem; line-height: 1.45; font-weight: 700; letter-spacing: -.02em; }
+
+  .timer { height: 6px; margin-top: 16px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+  .timer > i { display: block; height: 100%; width: 0; background: var(--accent); }
+  .timer.run > i { width: 100%; transition: width 30s linear; }
+  .timer.over > i { background: var(--again); }
+  .hint { margin: 8px 0 0; color: var(--muted); font-size: .9375rem; min-height: 1.7em; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .actions button { flex: 1 1 160px; }
+
+  .answer { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--border); }
+  .label { margin: 16px 0 6px; color: var(--muted); font-size: .8125rem; font-weight: 600; }
+  .short { margin: 0; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; font-size: 1.0625rem; }
+  .short p { margin: 0; }
+  .short p + p { margin-top: 8px; }
+  .detail > * { margin: 0 0 10px; }
+  .detail > *:last-child { margin-bottom: 0; }
+  .detail img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+  .detail pre {
+    margin: 0 0 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; overflow-x: auto; font-size: .875rem; line-height: 1.6;
+    font-family: 'JetBrains Mono', Consolas, 'D2Coding', Menlo, monospace;
+  }
+  .detail code { font-family: 'JetBrains Mono', Consolas, 'D2Coding', Menlo, monospace; font-size: .9em; }
+  .tablebox { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .9375rem; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--surface); font-weight: 600; }
+  .follow { margin: 0; padding: 0; list-style: none; }
+  .follow li { padding: 10px 0; border-top: 1px solid var(--border); }
+  .follow li:first-child { border-top: 0; padding-top: 0; }
+  .follow .fq { font-weight: 600; }
+  .follow .fa { color: var(--muted); }
+  a { color: var(--accent); }
+
+  .done h2 { margin: 0 0 6px; font-size: 1.25rem; letter-spacing: -.02em; }
+  .done p { margin: 0 0 12px; color: var(--muted); }
+  .done ol { margin: 0 0 4px; padding-left: 1.25rem; }
+  .done li { margin: 4px 0; }
+  .message { color: var(--muted); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="top">
+    <h1 id="title">질문 연습 카드</h1>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <div class="options" id="options" hidden>
+    <label><input type="checkbox" id="shuffle"> 순서 섞기</label>
+    <label><input type="checkbox" id="useTimer" checked> 30초 재기</label>
+    <span class="spacer"></span>
+    <button class="small" id="lastBlocked" hidden></button>
+    <button class="small" id="restart">처음부터</button>
+  </div>
+
+  <p class="message" id="message">글에서 질문을 읽어 오는 중입니다.</p>
+
+  <div class="card" id="card" hidden>
+    <div class="group" id="group"></div>
+    <h2 class="question" id="question"></h2>
+    <div class="timer" id="timer"><i></i></div>
+    <p class="hint" id="hint"></p>
+
+    <div class="actions" id="askActions">
+      <button class="primary" id="reveal">답 보기<kbd>Space</kbd></button>
+    </div>
+
+    <div class="answer" id="answer" hidden>
+      <div class="label">먼저 할 답</div>
+      <div class="short" id="short"></div>
+      <div id="detailBox">
+        <div class="label">이유와 자세한 내용</div>
+        <div class="detail" id="detail"></div>
+      </div>
+      <div id="followBox">
+        <div class="label">꼬리 질문</div>
+        <ul class="follow" id="follow"></ul>
+      </div>
+      <div class="actions">
+        <button class="good" id="ok">바로 답했다<kbd>1</kbd></button>
+        <button class="again" id="again">막혔다<kbd>2</kbd></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card done" id="done" hidden>
+    <h2 id="doneTitle"></h2>
+    <p id="doneText"></p>
+    <ol id="doneList"></ol>
+    <div class="actions">
+      <button class="again" id="retryBlocked">막힌 것만 다시</button>
+      <button id="restart2">처음부터</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ── 테마: 블로그 글 안에 끼워져 있으면 블로그의 밝은·어두운 테마를 따라간다 ──
+  function parentRoot() {
+    try { return window.parent !== window ? window.parent.document.documentElement : null; } catch (e) { return null; }
+  }
+  function applyTheme() {
+    var theme = null, root = parentRoot();
+    if (root) theme = root.dataset.theme || null;
+    if (!theme) { try { theme = localStorage.getItem('theme'); } catch (e) {} }
+    if (theme !== 'dark' && theme !== 'light') {
+      theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.dataset.theme = theme;
+  }
+  applyTheme();
+  (function watchTheme() {
+    var root = parentRoot();
+    if (!root || !window.MutationObserver) return;
+    try { new MutationObserver(applyTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) {}
+  })();
+
+  // ── 끼워 넣은 틀의 높이를 내용에 맞춘다 (같은 사이트 안에서만 됨) ──
+  function fitFrame() {
+    try {
+      var frame = window.frameElement;
+      if (frame) frame.style.height = Math.ceil($('app').getBoundingClientRect().height) + 'px';
+    } catch (e) {}
+  }
+  if (window.ResizeObserver) { try { new ResizeObserver(fitFrame).observe($('app')); } catch (e) {} }
+  window.addEventListener('load', fitFrame);
+
+  // ── 글 읽어 오기 ──
+  var slug = (new URLSearchParams(location.search).get('post') || '').replace(/[^a-z0-9-]/gi, '');
+  var postUrl = new URL('../posts/' + slug + '/', location.href);
+  var storeKey = 'question-cards:' + slug;
+  var cards = [];
+
+  function clean(node) {
+    // 글에서 가져온 조각에서 이 페이지에 필요 없는 속성과 요소를 뗀다.
+    var copy = document.importNode(node, true);
+    var all = [copy].concat(Array.prototype.slice.call(copy.querySelectorAll('*')));
+    all.forEach(function (el) {
+      if (/^(SCRIPT|IFRAME|STYLE)$/.test(el.tagName)) { el.remove(); return; }
+      ['class', 'style', 'id', 'tabindex'].forEach(function (a) { el.removeAttribute(a); });
+      if (el.tagName === 'A') { el.setAttribute('target', '_top'); el.setAttribute('rel', 'noopener'); }
+    });
+    return copy;
+  }
+
+  function parse(doc) {
+    var prose = doc.querySelector('.prose');
+    if (!prose) return [];
+    var out = [], group = '', cur = null;
+    Array.prototype.forEach.call(prose.children, function (el) {
+      var tag = el.tagName;
+      if (tag === 'H2' || tag === 'H3') {
+        var h = el.cloneNode(true);
+        Array.prototype.forEach.call(h.querySelectorAll('.heading-anchor'), function (a) { a.remove(); });
+        var text = h.textContent.trim();
+        if (tag === 'H2') { group = text; cur = null; return; }
+        var m = /^Q\s*(\d+)\.\s*(.+)$/.exec(text);
+        if (!m) { cur = null; return; }
+        cur = { id: el.id || ('q' + m[1]), no: m[1], group: group, q: m[2], short: [], detail: [], follow: [] };
+        out.push(cur);
+        return;
+      }
+      if (!cur) return;
+      if (tag === 'BLOCKQUOTE' && !cur.short.length) {
+        Array.prototype.forEach.call(el.children, function (p) { cur.short.push(clean(p)); });
+        return;
+      }
+      if (tag === 'TABLE') {
+        var firstHead = el.querySelector('th');
+        if (firstHead && firstHead.textContent.trim() === '꼬리 질문') {
+          Array.prototype.forEach.call(el.querySelectorAll('tbody tr'), function (tr) {
+            var td = tr.querySelectorAll('td');
+            if (td.length >= 2) cur.follow.push({ q: td[0].textContent.trim(), a: clean(td[1]) });
+          });
+          return;
+        }
+        var box = document.createElement('div');
+        box.className = 'tablebox';
+        box.appendChild(clean(el));
+        cur.detail.push(box);
+        return;
+      }
+      if (tag === 'PRE') {
+        if (el.getAttribute('data-language') === 'mermaid') return;   // 그림은 글에서 본다
+        var pre = document.createElement('pre');
+        pre.textContent = el.textContent;
+        cur.detail.push(pre);
+        return;
+      }
+      if (tag === 'P') {
+        // 그림 설명처럼 작은 글씨만 있는 문단은 뺀다.
+        if (el.children.length === 1 && el.children[0].tagName === 'SMALL' && el.textContent.trim() === el.children[0].textContent.trim()) return;
+        cur.detail.push(clean(el));
+        return;
+      }
+      if (tag === 'UL' || tag === 'OL') cur.detail.push(clean(el));
+      // 그 밖의 것(그림 틀, 끼워 넣은 페이지 등)은 카드에 싣지 않는다.
+    });
+    return out.filter(function (c) { return c.short.length > 0; });
+  }
+
+  // ── 진행 상태 ──
+  var deck = [], pos = 0, okIds = [], againIds = [], revealed = false, timerId = null;
+
+  function loadBlocked() {
+    try { var v = JSON.parse(localStorage.getItem(storeKey) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  }
+  function saveBlocked(ids) { try { localStorage.setItem(storeKey, JSON.stringify(ids)); } catch (e) {} }
+
+  function shuffled(list) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+
+  function start(indexes) {
+    deck = $('shuffle').checked ? shuffled(indexes) : indexes.slice();
+    pos = 0; okIds = []; againIds = [];
+    $('done').hidden = true; $('card').hidden = false;
+    show();
+  }
+  function startAll() { start(cards.map(function (_, i) { return i; })); }
+
+  function setTimer(on) {
+    var t = $('timer');
+    if (timerId) { clearTimeout(timerId); timerId = null; }
+    t.classList.remove('run', 'over');
+    t.hidden = !on;
+    if (!on) return;
+    void t.offsetWidth;                       // 막대를 0에서 다시 시작시킨다
+    t.classList.add('run');
+    timerId = setTimeout(function () {
+      t.classList.add('over');
+      if (!revealed) $('hint').textContent = '30초가 지났습니다. 답을 열어 맞춰 보세요.';
+    }, 30000);
+  }
+
+  function show() {
+    var c = cards[deck[pos]];
+    revealed = false;
+    $('count').textContent = (pos + 1) + ' / ' + deck.length;
+    $('bar').style.width = (pos / deck.length * 100) + '%';
+    $('group').textContent = c.group;
+    $('question').textContent = c.q;
+    $('answer').hidden = true;
+    $('askActions').hidden = false;
+    $('hint').hidden = false;
+    $('hint').textContent = '소리 내어 답해 본 뒤 답을 여세요.';
+    setTimer($('useTimer').checked);
+    $('reveal').focus({ preventScroll: true });
+  }
+
+  function fill(box, nodes) { box.textContent = ''; nodes.forEach(function (n) { box.appendChild(n.cloneNode(true)); }); }
+
+  function reveal() {
+    if (revealed || $('card').hidden) return;
+    var c = cards[deck[pos]];
+    revealed = true;
+    setTimer(false);
+    $('hint').hidden = true;
+    fill($('short'), c.short);
+    fill($('detail'), c.detail);
+    $('detailBox').hidden = c.detail.length === 0;
+    var ul = $('follow'); ul.textContent = '';
+    c.follow.forEach(function (f) {
+      var li = document.createElement('li');
+      var q = document.createElement('div'); q.className = 'fq'; q.textContent = f.q;
+      var a = document.createElement('div'); a.className = 'fa';
+      Array.prototype.forEach.call(f.a.cloneNode(true).childNodes, function (n) { a.appendChild(n); });
+      li.appendChild(q); li.appendChild(a); ul.appendChild(li);
+    });
+    $('followBox').hidden = c.follow.length === 0;
+    $('askActions').hidden = true;
+    $('answer').hidden = false;
+    $('ok').focus({ preventScroll: true });
+  }
+
+  function rate(ok) {
+    if (!revealed) return;
+    var id = cards[deck[pos]].id;
+    (ok ? okIds : againIds).push(id);
+    pos += 1;
+    if (pos < deck.length) show(); else finish();
+  }
+
+  function finish() {
+    // 이번에 바로 답한 것은 막힌 목록에서 빼고, 막힌 것은 더한다.
+    var blocked = loadBlocked().filter(function (id) { return okIds.indexOf(id) === -1; });
+    againIds.forEach(function (id) { if (blocked.indexOf(id) === -1) blocked.push(id); });
+    saveBlocked(blocked);
+
+    $('card').hidden = true; $('done').hidden = false;
+    $('count').textContent = deck.length + ' / ' + deck.length;
+    $('bar').style.width = '100%';
+    $('doneTitle').textContent = deck.length + '개 중 ' + okIds.length + '개를 바로 답했습니다';
+    var list = $('doneList'); list.textContent = '';
+    if (againIds.length) {
+      $('doneText').textContent = '막힌 질문입니다. 누르면 글의 그 자리로 갑니다.';
+      againIds.forEach(function (id) {
+        var c = cards.filter(function (x) { return x.id === id; })[0];
+        var li = document.createElement('li'), a = document.createElement('a');
+        a.href = postUrl.pathname + '#' + encodeURIComponent(id); a.target = '_top'; a.textContent = c.q;
+        li.appendChild(a); list.appendChild(li);
+      });
+    } else {
+      $('doneText').textContent = '막힌 질문이 없습니다.';
+    }
+    $('retryBlocked').hidden = againIds.length === 0;
+    refreshLastBlocked();
+  }
+
+  function indexesOf(ids) {
+    return cards.map(function (c, i) { return ids.indexOf(c.id) !== -1 ? i : -1; }).filter(function (i) { return i >= 0; });
+  }
+  function refreshLastBlocked() {
+    var n = indexesOf(loadBlocked()).length, b = $('lastBlocked');
+    b.hidden = n === 0;
+    b.textContent = '지난번에 막힌 ' + n + '개만';
+  }
+
+  $('reveal').addEventListener('click', reveal);
+  $('ok').addEventListener('click', function () { rate(true); });
+  $('again').addEventListener('click', function () { rate(false); });
+  $('restart').addEventListener('click', startAll);
+  $('restart2').addEventListener('click', startAll);
+  $('retryBlocked').addEventListener('click', function () { start(indexesOf(againIds)); });
+  $('lastBlocked').addEventListener('click', function () { start(indexesOf(loadBlocked())); });
+  $('shuffle').addEventListener('change', startAll);
+  $('useTimer').addEventListener('change', function () { if (!revealed && !$('card').hidden) setTimer($('useTimer').checked); });
+  document.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey || $('card').hidden) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (!revealed && e.key === ' ' && e.target.tagName !== 'BUTTON') { e.preventDefault(); reveal(); }
+    else if (revealed && e.key === '1') rate(true);
+    else if (revealed && e.key === '2') rate(false);
+  });
+
+  function fail(text) {
+    $('message').textContent = '';
+    $('message').appendChild(document.createTextNode(text + ' '));
+    if (slug) {
+      var a = document.createElement('a');
+      a.href = postUrl.pathname; a.target = '_top'; a.textContent = '글로 가기';
+      $('message').appendChild(a);
+    }
+  }
+
+  if (!slug) { fail('주소 끝에 ?post=글이름 을 붙여 열어 주세요.'); return; }
+  fetch(postUrl, { credentials: 'same-origin' })
+    .then(function (res) { if (!res.ok) throw new Error(String(res.status)); return res.text(); })
+    .then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      cards = parse(doc);
+      if (!cards.length) { fail('글에서 질문을 찾지 못했습니다.'); return; }
+      var h1 = doc.querySelector('h1');
+      var name = h1 ? h1.textContent.trim().replace(/\s*정리$/, '') : '질문';
+      $('title').textContent = name + ' 연습 카드';
+      document.title = name + ' 연습 카드';
+      $('message').hidden = true; $('options').hidden = false;
+      refreshLastBlocked();
+      startAll();
+    })
+    .catch(function () { fail('글을 불러오지 못했습니다.'); });
+})();
+</script>
+</body>
+</html>
